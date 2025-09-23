@@ -20,6 +20,8 @@ const user = {
   fill: "#000000"   
 };
 
+
+
 /**
  * Create the canvas
  */
@@ -39,6 +41,7 @@ function draw() {
   // Draw the user and puck
   drawUser();
   drawPuck();
+  movePuck();
 }
 
 /**
@@ -49,6 +52,20 @@ function moveUser() {
   user.y = mouseY;
 }
 
+  // Calculate distance between circles' centres
+  const d = dist(userCircle.x, userCircle.y, targetCircle.x, targetCircle.y);
+  // Check if that distance is smaller than their two radii, 
+  // because if it is, they are overlapping by the amazing
+  // power of geometry!
+  const overlap = (d < userCircle.size/2 + targetCircle.size/2);
+  // Set fill based on whether they overlap
+  if (overlap) {
+    targetCircle.fill = targetCircle.fills.overlap;
+  }
+  else {
+    targetCircle.fill = targetCircle.fills.noOverlap;
+  }
+
 /**
  * Displays the user circle
  */
@@ -58,7 +75,7 @@ function drawUser() {
   fill(user.fill);
   ellipse(user.x, user.y, user.size);
   pop();
-}
+};
 
 /**
  * Displays the puck circle
@@ -69,4 +86,24 @@ function drawPuck() {
   fill(puck.fill);
   ellipse(puck.x, puck.y, puck.size);
   pop();
+};
+
+function movePuck() {
+    //Calculate distance between user and puck
+    const d = dist(user.x, user.y, puck.x, puck.y);
+    if (d < user.size / 2 + puck.size / 2) {
+
+        if (puck.x > user.x) {
+            puck.x += 1
+        }
+        if (puck.y > user.y) {
+            puck.y += 1
+        }
+         if (puck.x < user.x) {
+            puck.x -= 1
+        }
+        if (puck.y < user.y) {
+            puck.y -= 1
+        }
+    }
 }
