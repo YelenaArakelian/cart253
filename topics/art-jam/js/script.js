@@ -7,6 +7,8 @@
  */
 
 "use strict";
+let mouthX = 500;
+let mouthY = 550;
 
 /**
  * Create a blue canvas */
@@ -112,16 +114,16 @@ function drawHuman() {
 
   //Draw a tank top
   noStroke();
-  fill("#a841c7ff");
+  fill("#000000ff");
   square(400, 715, 200);
 
   //Draw the left straps
-  stroke("#a841c7ff");
+  stroke("#000000ff");
   strokeWeight(4);
   line(403, 715, 438, 650);
 
   //Draw the right straps
-  stroke("#a841c7ff");
+  stroke("#000000ff");
   strokeWeight(4);
   line(597, 715, 562, 650);
 
@@ -129,4 +131,12 @@ function drawHuman() {
   noStroke();
   fill("#f5dec3ff");
   ellipse(500, 430, 305, 330);
+
+  //Distance between mouse and mouth
+  let d = dist(mouseX, mouseY, mouthX, mouthY);
+  let mouthSize = map(d, 0, 400, 400, 50, true);
+
+  //Draw a mouth
+  fill("#f7806bff");
+  ellipse(mouthX, mouthY, mouthSize, 40);
 }
