@@ -36,6 +36,54 @@ function draw() {
   fill("808080");
   ellipse(280, 120, 170, 90);
   drawHuman();
+  drawEye();
+}
+
+function drawEye() {
+  //Draw the left eye
+  noStroke();
+  fill("#ffffff");
+  ellipse(420, 450, 80, 80);
+
+  //Draw the left
+  noStroke();
+  fill("#000000ff");
+  ellipse(420, 450, 40, 40);
+
+  //Left eyebags
+  noStroke();
+  fill("#f1d3afff");
+  ellipse(425, 474, 100, 40);
+
+  //Right eye
+  noStroke();
+  fill("#ffffff");
+  ellipse(580, 450, 80, 80);
+
+  //Right pupil
+  noStroke();
+  fill("#000000ff");
+  ellipse(580, 450, 40, 40);
+
+  //Draw bangs
+  noStroke();
+  fill("#880affff");
+  ellipse(500, 320, 240, 130);
+
+  //Right eyebags
+  noStroke();
+  fill("#f1d3afff");
+  ellipse(575, 474, 100, 40);
+
+  //Draw right eyebrows
+  noStroke();
+  fill("#2e2622ff");
+  ellipse(580, 390, 80, 20);
+
+  //Draw left eyebrows
+  noStroke();
+  fill("#2e2622ff");
+  ellipse(425, 390, 80, 20);
 }
 
 function drawHuman() {
@@ -81,9 +129,4 @@ function drawHuman() {
   noStroke();
   fill("#f5dec3ff");
   ellipse(500, 430, 305, 330);
-
-  //Draw bangs
-  noStroke();
-  fill("#880affff");
-  ellipse(500, 350, 290, 170);
 }
