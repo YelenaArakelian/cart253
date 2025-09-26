@@ -25,7 +25,7 @@ function draw() {
   rect(0, 650, 1000, 200);
 
   //Draw the sun
-  fill("#eece17ff");
+  fill("#fad504ff");
   circle(100, 100, 130);
 
   //Draw the cloud
