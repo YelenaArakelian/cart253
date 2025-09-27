@@ -45,6 +45,10 @@ function draw() {
   ellipse(250, 80, 120, 90);
   fill("808080");
   ellipse(280, 120, 170, 90);
+  fill("808080");
+  ellipse(890, 190, 170, 90);
+  fill("808080");
+  ellipse(790, 160, 140, 70);
   drawHuman();
   drawEye();
 
@@ -154,6 +158,9 @@ function drawHuman() {
   let mouthSize = map(d, 0, 400, 600, 30, true);
 
   //Draw a mouth
+  noStroke();
+  fill("#5e2424ff");
+  ellipse(500, 550, 30, 60);
   fill("#f7806bff");
   ellipse(mouthX, mouthY, mouthSize, 40);
 }
