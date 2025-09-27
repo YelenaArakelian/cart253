@@ -6,21 +6,29 @@
  *
  */
 
-"use strict";
 let mouthX = 500;
 let mouthY = 550;
+
+function draw() {
+  drawBackground();
+  drawHuman();
+  drawEye();
+  drawMouth();
+  drawCookieCursor();
+}
 
 /**
  * Create a blue canvas */
 function setup() {
   createCanvas(1000, 850);
-  background("#becbf8ff");
+
+  noCursor();
 }
 
-/**
- * Draws land, a sun, a dog,
- */
 function draw() {
+  //Draw a background
+  background("#becbf8ff");
+
   //Draw the land
   noStroke();
   fill("#87ab69");
@@ -39,6 +47,15 @@ function draw() {
   ellipse(280, 120, 170, 90);
   drawHuman();
   drawEye();
+
+  //Draw cookie cursor
+  fill("#502b0cff");
+  ellipse(mouseX, mouseY, 40);
+
+  fill(100, 50, 0); // chocolate chips
+  ellipse(mouseX - 5, mouseY - 5, 5);
+  ellipse(mouseX + 7, mouseY - 3, 5);
+  ellipse(mouseX - 2, mouseY + 6, 5);
 }
 
 function drawEye() {
@@ -54,8 +71,8 @@ function drawEye() {
 
   //Left eyebags
   noStroke();
-  fill("#f1d3afff");
-  ellipse(425, 474, 100, 40);
+  fill("#f1afb4ff");
+  ellipse(420, 479, 80, 30);
 
   //Right eye
   noStroke();
@@ -74,8 +91,8 @@ function drawEye() {
 
   //Right eyebags
   noStroke();
-  fill("#f1d3afff");
-  ellipse(575, 474, 100, 40);
+  fill("#f1afb4ff");
+  ellipse(580, 479, 80, 30);
 
   //Draw right eyebrows
   noStroke();
@@ -92,15 +109,15 @@ function drawHuman() {
   //Draw the hair
   noStroke();
   fill("#2e2622ff");
-  ellipse(440, 460, 305, 420);
+  ellipse(440, 460, 310, 460);
   noStroke();
   fill("#2e2622ff");
-  ellipse(560, 460, 305, 420);
+  ellipse(560, 460, 305, 460);
 
   //Draw the underneath of the hair
   noStroke();
   fill("#880affff");
-  rect(399, 550, 200, 100);
+  rect(375, 520, 250, 150);
 
   //Draw a neck
   noStroke();
@@ -134,7 +151,7 @@ function drawHuman() {
 
   //Distance between mouse and mouth
   let d = dist(mouseX, mouseY, mouthX, mouthY);
-  let mouthSize = map(d, 0, 400, 400, 50, true);
+  let mouthSize = map(d, 0, 400, 600, 30, true);
 
   //Draw a mouth
   fill("#f7806bff");
