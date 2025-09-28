@@ -69,10 +69,13 @@ function drawBee() {
 }
 
 function drawMouth() {
+  // Calculate the distance between the mouse cursor and the mouth
   let d = dist(mouseX, mouseY, mouthX, mouthY);
-  let mouthSize = map(d, 0, 400, 600, 30, true);
 
-  noStroke();
+  /* Set the size of the mouth to be dependent on the distance between the mouse cursor and the mouth.
+     When the cursor is farthest away from the mouth, the mouth size grows and vice versa*/
+  let mouthSize = map(d, 30, 680, 1000, 30, true);
+   noStroke();
   fill("#5e2424ff");
   ellipse(500, 550, 30, 60);
   fill("#f7806bff");
