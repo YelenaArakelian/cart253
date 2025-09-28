@@ -8,6 +8,9 @@
 
 let mouthX = 500;
 let mouthY = 550;
+let beeX = 0;
+let beeY = 120;
+let beeSpeed = 0.5;
 
 function draw() {
   drawBackground();
@@ -107,6 +110,19 @@ function drawEye() {
   noStroke();
   fill("#2e2622ff");
   ellipse(425, 390, 80, 20);
+
+  //Draw bee
+  fill("#fffb00ff"); //body
+  ellipse(beeX, beeY, 50, 30);
+  fill("#000000ff"); //stripes
+  ellipse(beeX - 10, beeY, 10, 25);
+  ellipse(beeX + 10, beeY, 10, 25);
+
+  //Move the damn bee
+  beeX += beeSpeed;
+  if (beeX > width + 40) {
+    beeX = -40;
+  }
 }
 
 function drawHuman() {
