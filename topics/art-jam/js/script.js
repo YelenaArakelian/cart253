@@ -1,35 +1,16 @@
-/**
- * Self Portrait
- * Yelena Arakelian
- *
- * A self portrait of Yelena
- *
- */
+"use strict";
 
 let mouthX = 500;
 let mouthY = 550;
-let beeX = 0;
-let beeY = 120;
-let beeSpeed = 0.5;
+let bee = undefined;
 
-function draw() {
-  drawBackground();
-  drawHuman();
-  drawEye();
-  drawMouth();
-  drawCookieCursor();
-}
-
-/**
- * Create a blue canvas */
 function setup() {
   createCanvas(1000, 850);
-
   noCursor();
+  bee = createBee(10);
 }
 
 function draw() {
-  //Draw a background
   background("#becbf8ff");
 
   //Draw the land
@@ -41,88 +22,89 @@ function draw() {
   fill("#fad504ff");
   circle(100, 100, 130);
 
-  //Draw the cloud
-  fill("808080");
+  //Draw the clouds
+  fill("#ffffff");
   ellipse(190, 100, 170, 80);
-  fill("808080");
   ellipse(250, 80, 120, 90);
-  fill("808080");
   ellipse(280, 120, 170, 90);
-  fill("808080");
   ellipse(890, 190, 170, 90);
-  fill("808080");
   ellipse(790, 160, 140, 70);
+
   drawHuman();
   drawEye();
+  drawMouth();
+  drawBee();
+  drawCookieCursor();
+}
+//Draw the Cookie cursor
+function drawCookieCursor() {
+  fill("#a55e23ff");
+  ellipse(mouseX, mouseY, 55);
+  fill(100, 50, 0);
+  ellipse(mouseX - 5, mouseY - 12, 6);
+  ellipse(mouseX + 9, mouseY - 3, 10);
+  ellipse(mouseX - 2, mouseY + 6, 11);
+}
 
-  //Draw cookie cursor
-  fill("#502b0cff");
-  ellipse(mouseX, mouseY, 40);
+//Add a Buzzy Bee
+function createBee(buzziness) {
+  const fly = {
+    x: random(0, width),
+    y: random(0, height),
+    size: 30,
+    buzziness: buzziness,
+  };
+  return fly;
+}
 
-  fill(100, 50, 0); // chocolate chips
-  ellipse(mouseX - 5, mouseY - 5, 5);
-  ellipse(mouseX + 7, mouseY - 3, 5);
-  ellipse(mouseX - 2, mouseY + 6, 5);
+function drawBee() {
+  //Buzzing the Bee
+  bee.x += random(-bee.buzziness, bee.buzziness);
+  bee.y += random(-bee.buzziness, bee.buzziness);
+
+  fill("#fad506ff");
+  ellipse(bee.x, bee.y, bee.size);
+  fill("#000000ff");
+  ellipse(bee.x, bee.y, bee.size / 2);
+}
+
+function drawMouth() {
+  let d = dist(mouseX, mouseY, mouthX, mouthY);
+  let mouthSize = map(d, 0, 400, 600, 30, true);
+
+  noStroke();
+  fill("#5e2424ff");
+  ellipse(500, 550, 30, 60);
+  fill("#f7806bff");
+  ellipse(mouthX, mouthY, mouthSize, 40);
 }
 
 function drawEye() {
-  //Draw the left eye
+  //Draw left eye
   noStroke();
-  fill("#ffffff");
+  fill("#ffffffff");
   ellipse(420, 450, 80, 80);
-
-  //Draw the left
-  noStroke();
   fill("#000000ff");
   ellipse(420, 450, 40, 40);
-
-  //Left eyebags
-  noStroke();
   fill("#f1afb4ff");
   ellipse(420, 479, 80, 30);
 
-  //Right eye
-  noStroke();
+  //Draw right eye
   fill("#ffffff");
   ellipse(580, 450, 80, 80);
-
-  //Right pupil
-  noStroke();
   fill("#000000ff");
   ellipse(580, 450, 40, 40);
-
-  //Draw bangs
-  noStroke();
-  fill("#880affff");
-  ellipse(500, 320, 240, 130);
-
-  //Right eyebags
-  noStroke();
   fill("#f1afb4ff");
   ellipse(580, 479, 80, 30);
 
-  //Draw right eyebrows
-  noStroke();
+  //Draw the bangs
+  fill("#880affff");
+  ellipse(500, 320, 240, 130);
+
+  //Draw eyebrows
   fill("#2e2622ff");
   ellipse(580, 390, 80, 20);
-
-  //Draw left eyebrows
-  noStroke();
-  fill("#2e2622ff");
   ellipse(425, 390, 80, 20);
-
-  //Draw bee
-  fill("#fffb00ff"); //body
-  ellipse(beeX, beeY, 50, 30);
-  fill("#000000ff"); //stripes
-  ellipse(beeX - 10, beeY, 10, 25);
-  ellipse(beeX + 10, beeY, 10, 25);
-
-  //Move the damn bee
-  beeX += beeSpeed;
-  if (beeX > width + 40) {
-    beeX = -40;
-  }
 }
 
 function drawHuman() {
@@ -130,53 +112,32 @@ function drawHuman() {
   noStroke();
   fill("#2e2622ff");
   ellipse(440, 460, 310, 460);
-  noStroke();
-  fill("#2e2622ff");
   ellipse(560, 460, 305, 460);
 
-  //Draw the underneath of the hair
-  noStroke();
+  //Draw the underneath
   fill("#880affff");
   rect(375, 520, 250, 150);
 
   //Draw a neck
-  noStroke();
   fill("#f1d3afff");
   square(440, 550, 120);
 
-  //Draw a torso
-  noStroke();
+  //Draw body
   fill("#f5dec3ff");
   rect(310, 650, 380, 320, 20);
 
-  //Draw a tank top
-  noStroke();
+  //Draw shirt
   fill("#000000ff");
   square(400, 715, 200);
 
-  //Draw the left straps
+  //Draw straps
   stroke("#000000ff");
   strokeWeight(4);
   line(403, 715, 438, 650);
-
-  //Draw the right straps
-  stroke("#000000ff");
-  strokeWeight(4);
   line(597, 715, 562, 650);
 
-  //Draw a head
+  //Draw the face
   noStroke();
   fill("#f5dec3ff");
   ellipse(500, 430, 305, 330);
-
-  //Distance between mouse and mouth
-  let d = dist(mouseX, mouseY, mouthX, mouthY);
-  let mouthSize = map(d, 0, 400, 600, 30, true);
-
-  //Draw a mouth
-  noStroke();
-  fill("#5e2424ff");
-  ellipse(500, 550, 30, 60);
-  fill("#f7806bff");
-  ellipse(mouthX, mouthY, mouthSize, 40);
 }
