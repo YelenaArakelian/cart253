@@ -4,11 +4,17 @@ let mouthX = 500;
 let mouthY = 550;
 let bee = undefined;
 let skyShade = 0.2;
+let sandvichSound;
+
+function preload() {
+  sandvichSound = loadSound("assets/sounds/heavy-tf2-eating-sandvich.mp3");
+}
 
 function setup() {
   createCanvas(1000, 850);
   noCursor();
   bee = createBee(10);
+  userStartAudio();
 }
 
 function draw() {
@@ -34,6 +40,11 @@ function draw() {
   ellipse(280, 120, 170, 90);
   ellipse(890, 190, 170, 90);
   ellipse(790, 160, 140, 70);
+
+  let d = dist(mouseX, mouseY, mouthX, mouthY);
+  if (d < 200 && !sandvichSound.isPlaying()) {
+    sandvichSound.play();
+  }
 
   drawHuman();
   drawEye();
