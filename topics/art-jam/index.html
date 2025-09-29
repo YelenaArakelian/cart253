@@ -28,5 +28,11 @@
 
   <body>
     <!-- HTML would go here if needed. -->
+    <audio src="assets/sounds/bee-buzzing-around.mp3" autoplay loop></audio>
+    <script>
+      document.body.onclick = () => {
+        document.querySelector("audio").muted = false;
+      };
+    </script>
   </body>
 </html>
