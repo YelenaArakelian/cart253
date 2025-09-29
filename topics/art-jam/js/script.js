@@ -5,9 +5,13 @@ let mouthY = 550;
 let bee = undefined;
 let skyShade = 0.2;
 let sandvichSound;
+let buzzSound;
 
 function preload() {
-  sandvichSound = loadSound("assets/sounds/heavy-tf2-eating-sandvich.mp3"); // Make the audio start before running anything
+  // Make the audio start before running anything
+
+  sandvichSound = loadSound("assets/sounds/heavy-tf2-eating-sandvich.mp3");
+  buzzSound = loadSound("assets/sounds/bee-buzzing-around.mp3");
 }
 
 function setup() {
@@ -44,6 +48,11 @@ function draw() {
   let d = dist(mouseX, mouseY, mouthX, mouthY); //Make the audio play once cookie get close to the mouth
   if (d < 200 && !sandvichSound.isPlaying()) {
     sandvichSound.play();
+  }
+
+  //Make the buzz sound play in background
+  if (!buzzSound.isPlaying()) {
+    buzzSound.play();
   }
 
   drawHuman();
