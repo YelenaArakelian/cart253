@@ -106,7 +106,7 @@ function drawEye() {
   fill("#000000ff");
   ellipse(420, 450, 40, 40);
   fill("#f1afb4ff");
-  ellipse(420, 479, 80, 30);
+  ellipse(420, 500, 80, 30);
 
   // Draw right eye
   fill("#ffffff");
@@ -114,7 +114,7 @@ function drawEye() {
   fill("#000000ff");
   ellipse(580, 450, 40, 40);
   fill("#f1afb4ff");
-  ellipse(580, 479, 80, 30);
+  ellipse(580, 500, 80, 30);
 
   // Draw the bangs
   fill("#880affff");
