@@ -28,12 +28,12 @@ This bit should attribute any code, assets or other elements used taken from oth
 > - The clown image is a capture of the clown from the Apple emoji character set.
 > - The barking sound effect is "single dog bark 1" by crazymonke9 from freesound.org: https://freesound.org/people/crazymonke9/sounds/418107/
 
+> Audio 1: heavy tf2 eating sandvich - Uploaded by HanbaobaoZaiNar - https://www.myinstants.com/en/instant/heavy-tf2-eating-sandvich-16899/
+
+> Audio 2: Bee Buzzing Around - Uploaded by Audiophiliac - https://www.myinstants.com/en/instant/bee-buzzing-around-73337/
+
 ## License
 
 This bit should include the license you want to apply to your work. For example:
 
 > This project is licensed under a Creative Commons Attribution ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en)) license with the exception of libraries and other components with their own licenses.
-
-> Audio 1: heavy tf2 eating sandvich - Uploaded by HanbaobaoZaiNar - https://www.myinstants.com/en/instant/heavy-tf2-eating-sandvich-16899/
-
-> Audio 2: Bee Buzzing Around - Uploaded by Audiophiliac - https://www.myinstants.com/en/instant/bee-buzzing-around-73337/
