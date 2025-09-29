@@ -6,34 +6,51 @@ Yelena Arakelian
 
 ## Description
 
-This description should help the reader understand what the program is, anything they should know to be able to experience it (controls, special features, etc.), and what the desired user experience is. For example:
+> - This project is a Self Portrait of Yelena Arakelian created in p5.js. It demonstrates Yelena really excited to eat cookie, as its her favorite snack, while a bee is annoying her with the buzzing sound, in addition of the sky changing color.
 
-> _The Mayor of Clown Town_ is a simulator experience that allows the user to control a small town populated entirely by clowns.
+## Features
 
-> The experience is controlled via the mouse, with left click selecting a clown and bringing up a menu of options such as "slip of banana peel" or "get into impossible capacious clown-car."
+> - Audio Interaction: When the cookie cursor is near the mouth, a sound effect of Heavy from Team Fortress 2 plays of him eating his "sandvich", as how he calls it.
+> - Mouth Animation: The mouth changes size based on how the cursor is.
+> - Bee Animation: The bee moves around randomly across the canvas.
+> - Sky Color Change: The sky gradually changes color overtime.
+> - Cookie Cursor: The cursor is a cookie that follows the mouse.
 
-> The project is meant to give the user a sense of what it would be the mayor of a town of clowns, eventually getting the sense that clowns are not taking their civic duties seriously.
+## How Requirement Are Met
 
-## Screenshot(s)
+1. **Use variables to create change over time**
 
-This bit should have some images of the program running so that the reader has a sense of what it looks like. For example:
+   - The "skyShade" variable gradually changes the sky's color.
+   - The bee's 'x' and 'y' positions are refreshed every frame to create random movement.
 
-> ![Image of a clown face](./assets/images/clown.png)
+2. **Use mouseX and mouseY to allow for some user interaction**
+
+   - Using "dist(mouseX, mouseY, mouthX, mouthY)", the mouse distance makes the mouth change sizes based on the distance.
+   - The cookie cursor follows the mouse.
+
+3. **Use at least one p5 function never used before**
+
+   - Used "constrain()" to keep skyShade value inside a specific range.
+   - Used "userStartAudio()" to allow the audio to play when my project begins.
+
+4. **Use at least one conditional to make the program respond to a changing variable**
+
+   - The program detects if the distance between the cookie cursor and mouth is less than 200 pixels, and plays a sound effect if it is: "if (d < 200 && !sandvichSound.isPlaying()) {
+     sandvichSound.play();
+     }"
 
 ## Attribution
 
-This bit should attribute any code, assets or other elements used taken from other sources. For example:
-
 > - This project uses [p5.js](https://p5js.org).
-> - The clown image is a capture of the clown from the Apple emoji character set.
-> - The barking sound effect is "single dog bark 1" by crazymonke9 from freesound.org: https://freesound.org/people/crazymonke9/sounds/418107/
 
-> Audio 1: heavy tf2 eating sandvich - Uploaded by HanbaobaoZaiNar - https://www.myinstants.com/en/instant/heavy-tf2-eating-sandvich-16899/
+> - Refrence used for constrain: https://p5js.org/reference/p5/constrain/
 
-> Audio 2: Bee Buzzing Around - Uploaded by Audiophiliac - https://www.myinstants.com/en/instant/bee-buzzing-around-73337/
+> - Refrence used for userStartAudio: https://p5js.org/reference/p5/userStartAudio/
+
+> - The eating sound effect is "heavy tf2 eating sandvich" by HanbaobaoZaiNar from myinstant.com: https://www.myinstants.com/en/instant/heavy-tf2-eating-sandvich-16899/
+
+> - The bee noise is "Buzzing Around" by Audiophiliac from myinstant.com: https://www.myinstants.com/en/instant/bee-buzzing-around-73337/
 
 ## License
-
-This bit should include the license you want to apply to your work. For example:
 
 > This project is licensed under a Creative Commons Attribution ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en)) license with the exception of libraries and other components with their own licenses.

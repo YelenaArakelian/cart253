@@ -7,7 +7,7 @@ let skyShade = 0.2;
 let sandvichSound;
 
 function preload() {
-  sandvichSound = loadSound("assets/sounds/heavy-tf2-eating-sandvich.mp3");
+  sandvichSound = loadSound("assets/sounds/heavy-tf2-eating-sandvich.mp3"); // Make the audio start before running anything
 }
 
 function setup() {
@@ -41,7 +41,7 @@ function draw() {
   ellipse(890, 190, 170, 90);
   ellipse(790, 160, 140, 70);
 
-  let d = dist(mouseX, mouseY, mouthX, mouthY);
+  let d = dist(mouseX, mouseY, mouthX, mouthY); //Make the audio play once cookie get close to the mouth
   if (d < 200 && !sandvichSound.isPlaying()) {
     sandvichSound.play();
   }
