@@ -2,6 +2,7 @@
 
 let mouthX = 500;
 let mouthY = 550;
+let skyShade = 1;
 let bee = undefined;
 
 function setup() {
@@ -11,11 +12,16 @@ function setup() {
 }
 
 function draw() {
-  background("#becbf8ff");
+  background("#43d2dcff")
 
+  // Gradually increase the Sky red
+  skyShade = constrain(skyShade +2, 0, 120);
+
+  background(skyShade, 203, 100);
+ 
   //Draw the land
   noStroke();
-  fill("#87ab69");
+  fill("#158410ff");
   rect(0, 650, 1000, 200);
 
   //Draw the sun
