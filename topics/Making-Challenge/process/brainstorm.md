@@ -1,22 +1,22 @@
 # Mod Jam ideas
 
-1. Frog camouflages slowly
-2. Frog gets sleepy
-3. Score floats up when fly is hit
-4. Frog grows in size for each fly is hit
-5. Change in atmospher every 5 hits
-6. Frog gets crazier if misses 3+ hits
-7. Frog peers watching frog on lilly pad
-8. Frog changes color
-9. Flies get faster over time
-10. Flies explode into firework when hit
-11. Frog's tongue length variates
-12. Flies multiply if you miss
-13. Occasional "imposter" fly
-14. Random wind gusts
-15. Poison Ivy flies
-16. Frog tongue gets longer for streaks
-17. Timer implemented
-18. Flies explode into debris
-19. Dark mode
-20. Frog's tongue on fire when streak acheieved
+1. Frog camouflages slowly (The frog goes camouflage adapting to the background colour, in which changes from day to night, only based on cosmetics purpose.)
+2. Frog gets sleepy (When going idle for awhile, the frog falls asleep until user moves the mouse around.)
+3. Score floats up when fly is hit (When fly is hit, "+1" text rise and fades)
+4. Frog grows in size for each fly is hit (When the fly is hit more and more, the frog gets bigger and bigger, but goes back to its normal size when lost streak.)
+5. Change in atmospher every 5 hits (Every 5 hits on the fly, the atmosphere can go from sunny to rainy.)
+6. Frog gets crazier if misses 3+ hits (The more fly hit missed, the frog's eye get red and shaking, and frog starts sweating.)
+7. Frog peers watching frog on lilly pad (Frog's peers watching the frog, to implement a friendly atmosphere)
+8. Frog changes color (Frog changes into variations of colour, chosen randomly at random times.)
+9. Fly get faster over time (The more flies the frog hits, the faster the fly gets.)
+10. Fly explode into firework when hit(When frog hits fly, as it dies, the fly explodes into colorful firework)
+11. Frog's tongue length variates (The frog's tongue lenght is variated randomly, so the frog could potentinally miss)
+12. Fly multiply if you miss (If the frog misses multiple times, the flies multiplies more and more)
+13. Occasional "imposter" fly (Some flies are decoys, almost like ghosts, and the tongue passes through them.)
+14. Random wind gusts (Random wind gusts causing the flies to swarm in side all together.)
+15. Frog croaks when score reaches x milestones (The frog gets excited and starts doing croak noises whenever is hitting x milestones.)
+16. Frog tongue gets longer for streaks (The more flies hit, the longer the tongue gets and the better reach.)
+17. Timer implemented (A timer is implemented to see how many flies is the user able to hit under x minute/second.)
+18. Flies explode into debris (When fly is hit, the fly explode into debris, almost like dust.)
+19. Dark mode (The atmosphere of the game changes overtime into dark mode, creating a different ambiance.)
+20. Frog's tongue on fire when streak acheieved (When the frog hits x streak, the frog hypes up and his tongue goes on fire, if missed, the tongue goes back to normal)
