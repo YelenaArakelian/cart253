@@ -15,6 +15,8 @@
 
 "use strict";
 
+let game;
+
 // Our frog
 const frog = {
   // The frog's body has a position and size
@@ -54,7 +56,7 @@ function setup() {
 }
 
 function drawBackground() {
-  // Sky already being background("#a1dcf3ff"); //
+  // Sky already being background("#09f8e4ff"); //
 
   // Draw the sun
   noStroke();
@@ -209,7 +211,13 @@ function drawFrog() {
   noStroke();
   ellipse(frog.body.x, frog.body.y, frog.body.size);
   //Frog's eyes
-
+  fill("#ffffff");
+  ellipse(frog.body.x - 50, frog.body.y - 80, 60); //Left eye
+  ellipse(frog.body.x + 50, frog.body.y - 80, 60); //Right eye
+  //Pupils
+  fill("#000000");
+  ellipse(frog.body.x - 50, frog.body.y - 80, 40); //Left eye
+  ellipse(frog.body.x + 50, frog.body.y - 80, 40); //Right eye
   pop();
 }
 
