@@ -107,7 +107,7 @@ function drawFriendFrog() {
   ellipse(598, 350, 20, 20, 0);
 }
 function draw() {
-  background("#a1dcf3ff");
+  background("#09f8e4ff");
   drawBackground();
   drawFriendFrog();
   moveFly();
