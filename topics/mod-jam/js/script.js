@@ -17,6 +17,41 @@
 
 let game;
 
+const friendFrogs = {
+  left: {
+    body: {
+      x: 50,
+      y: 350,
+      width: 60,
+      height: 50,
+    },
+    eyes: {
+      leftBall: { x: 30, y: 330, size: 30 },
+      rightBall: { x: 70, y: 330, size: 30 },
+      leftPupil: { x: 30, y: 330, size: 15 },
+      rightPupil: {
+        x: 70,
+        y: 330,
+        size: 15,
+      },
+    },
+  },
+  right: {
+    body: {
+      x: 570,
+      y: 380,
+      width: 80,
+      height: 60,
+    },
+    eyes: {
+      leftBall: { x: 540, y: 350, size: 20 },
+      rightBall: { x: 598, y: 350, size: 20 },
+      leftPupil: { x: 540, y: 350, size: 20 },
+      rightPupil: { x: 598, y: 350, size: 20 },
+    },
+  },
+};
+
 // Our frog
 const frog = {
   // The frog's body has a position and size
@@ -86,27 +121,58 @@ function drawFriendFrog() {
   //Body of the friends
   fill("#00ff00");
   noStroke();
-  ellipse(50, 350, 60, 50, 0); //Friend 1 on the left
+  ellipse(
+    friendFrogs.left.body.x,
+    friendFrogs.left.body.y,
+    friendFrogs.left.body.width,
+    friendFrogs.left.body.height
+  ); //Friend 1 on the left
 
-  ellipse(570, 380, 80, 60, 0); //Friend 2 on the right
-  ellipse(540, 350, 40, 40, 0);
-  ellipse(598, 350, 40, 40, 0);
+  ellipse(
+    friendFrogs.right.body.x,
+    friendFrogs.right.body.y,
+    friendFrogs.right.body.width,
+    friendFrogs.right.body.height
+  ); //Friend 2 on the right
 
   //White eyes
   fill("#ffffff");
-  ellipse(30, 330, 30, 30, 0); //Right friend's eyes
-  ellipse(70, 330, 30, 30, 0);
+  circle(
+    friendFrogs.left.eyes.leftBall.x,
+    friendFrogs.left.eyes.leftBall.y,
+    friendFrogs.left.eyes.leftBall.size
+  ); //Left friend's eyes
+  circle(70, 330, 30);
 
-  ellipse(540, 350, 40, 40, 0); //Left friend's eyes
-  ellipse(598, 350, 40, 40, 0);
+  circle(540, 350, 40); //Right friend's eyes
+  circle(598, 350, 40);
 
   //Pupils
-  fill("#000000ff"); //Right friend's pupils
-  ellipse(30, 330, 15, 15, 0);
-  ellipse(70, 330, 15, 15, 0);
+  fill("#000000ff");
+  //Left friend's pupils
+  ellipse(
+    friendFrogs.left.eyes.leftPupil.x,
+    friendFrogs.left.eyes.leftPupil.y,
+    friendFrogs.left.eyes.leftPupil.size
+  );
 
-  ellipse(540, 350, 20, 20, 0); //Left friend's pupils
-  ellipse(598, 350, 20, 20, 0);
+  ellipse(
+    friendFrogs.left.eyes.rightPupil.x,
+    friendFrogs.left.eyes.rightPupil.y,
+    friendFrogs.left.eyes.rightPupil.size
+  );
+
+  //Right friend's pupils
+  ellipse(
+    friendFrogs.right.eyes.leftPupil.x,
+    friendFrogs.right.eyes.leftPupil.y,
+    friendFrogs.right.eyes.leftPupil.size
+  );
+  ellipse(
+    friendFrogs.right.eyes.rightPupil.x,
+    friendFrogs.right.eyes.rightPupil.y,
+    friendFrogs.right.eyes.rightPupil.size
+  );
 }
 function draw() {
   background("#09f8e4ff");
@@ -118,6 +184,7 @@ function draw() {
   moveTongue();
   drawFrog();
   checkTongueFlyOverlap();
+  moveFriendFrogEye();
 }
 
 /**
@@ -131,6 +198,95 @@ function moveFly() {
   if (fly.x > width) {
     resetFly();
   }
+}
+
+function moveFriendFrogEye() {
+  // The center of the eyeball
+  const leftFrog = {
+    leftEye: createVector(
+      friendFrogs.left.eyes.leftBall.x,
+      friendFrogs.left.eyes.leftBall.y
+    ),
+    rightEye: createVector(
+      friendFrogs.left.eyes.rightBall.x,
+      friendFrogs.left.eyes.rightBall.y
+    ),
+  };
+
+  const rightFrog = {
+    leftEye: createVector(
+      friendFrogs.right.eyes.leftBall.x,
+      friendFrogs.right.eyes.leftBall.y
+    ),
+    rightEye: createVector(
+      friendFrogs.right.eyes.rightBall.x,
+      friendFrogs.right.eyes.rightBall.y
+    ),
+  };
+
+  // Where we want the eyes to look at
+  const target = createVector(frog.body.x, frog.body.y);
+
+  // Direction of the vector (from the eye to the frog)
+  const leftFrogsLeftEyeDir = p5.Vector.sub(target, leftFrog.leftEye);
+  const leftFrogsRightEyeDir = p5.Vector.sub(target, leftFrog.rightEye);
+
+  const rightFrogsLeftEyeDir = p5.Vector.sub(target, rightFrog.leftEye);
+  const rightFrogsRightEyeDir = p5.Vector.sub(target, rightFrog.rightEye);
+
+  // Limits the pupil to only the inside of the eyeball
+  leftFrogsLeftEyeDir.limit(
+    friendFrogs.left.eyes.leftBall.size / 2 -
+      friendFrogs.left.eyes.leftPupil.size / 2 -
+      2
+  );
+
+  leftFrogsRightEyeDir.limit(
+    friendFrogs.left.eyes.rightBall.size / 2 -
+      friendFrogs.left.eyes.rightPupil.size / 2 -
+      2
+  );
+
+  rightFrogsLeftEyeDir.limit(
+    friendFrogs.right.eyes.leftBall.size / 2 -
+      friendFrogs.right.eyes.leftPupil.size / 2 +
+      8
+  );
+
+  rightFrogsRightEyeDir.limit(
+    friendFrogs.right.eyes.rightBall.size / 2 -
+      friendFrogs.right.eyes.rightPupil.size / 2 +
+      8
+  );
+
+  // Update the postion of the pupil by adding the 2 vectors
+  const leftFrogsLeftPupPos = p5.Vector.add(
+    leftFrog.leftEye,
+    leftFrogsLeftEyeDir
+  );
+  const leftFrogsRightPupPos = p5.Vector.add(
+    leftFrog.rightEye,
+    leftFrogsRightEyeDir
+  );
+
+  const rightFrogsLeftPupPos = p5.Vector.add(
+    rightFrog.leftEye,
+    rightFrogsLeftEyeDir
+  );
+  const rightFrogsRightPupPos = p5.Vector.add(
+    rightFrog.rightEye,
+    rightFrogsRightEyeDir
+  );
+
+  friendFrogs.left.eyes.leftPupil.x = leftFrogsLeftPupPos.x;
+  friendFrogs.left.eyes.leftPupil.y = leftFrogsLeftPupPos.y;
+  friendFrogs.left.eyes.rightPupil.x = leftFrogsRightPupPos.x;
+  friendFrogs.left.eyes.rightPupil.y = leftFrogsRightPupPos.y;
+
+  friendFrogs.right.eyes.leftPupil.x = rightFrogsLeftPupPos.x;
+  friendFrogs.right.eyes.leftPupil.y = rightFrogsLeftPupPos.y;
+  friendFrogs.right.eyes.rightPupil.x = rightFrogsRightPupPos.x;
+  friendFrogs.right.eyes.rightPupil.y = rightFrogsRightPupPos.y;
 }
 
 /**
@@ -158,6 +314,8 @@ function resetFly() {
 function moveFrog() {
   frog.body.x = mouseX;
 }
+
+function eyeTracking() {}
 
 /**
  * Handles moving the tongue based on its state
