@@ -15,7 +15,11 @@
 
 "use strict";
 
-let game;
+let frogGif;
+let gameState = "title";
+let typedText = ""; //track what player types
+let frogVisible = false;
+let Font;
 
 const friendFrogs = {
   left: {
@@ -79,6 +83,11 @@ const fly = {
   size: 10,
   speed: 3,
 };
+
+function preload() {
+  frogGif = loadImage("assets/images/frog.gif");
+  Font = loadFont("assets/fonts/HooeyDEMO-Regular.otf");
+}
 
 /**
  * Creates the canvas and initializes the fly
@@ -174,17 +183,63 @@ function drawFriendFrog() {
     friendFrogs.right.eyes.rightPupil.size
   );
 }
+
 function draw() {
-  background("#09f8e4ff");
-  drawBackground();
-  drawFriendFrog();
-  moveFly();
-  drawFly();
-  moveFrog();
-  moveTongue();
-  drawFrog();
-  checkTongueFlyOverlap();
-  moveFriendFrogEye();
+  if (gameState === "title") {
+    drawTitleScreen();
+  } else if (gameState === "play") {
+    background("#09f8e4ff");
+    drawBackground();
+    drawFriendFrog();
+    moveFly();
+    drawFly();
+    moveFrog();
+    moveTongue();
+    drawFrog();
+    checkTongueFlyOverlap();
+    moveFriendFrogEye();
+    image(frogGif, 200, 200, 150, 150);
+  }
+}
+function drawTitleScreen() {
+  //Title screen background color
+  background("#1d740aff");
+
+  //Make frog gif appear above text
+  image(frogGif, width / 2 - 75, height / 2 + 100, 150, 150);
+
+  //Center all text shown
+  textAlign(CENTER);
+
+  //Title text
+  fill("#2fff00ff");
+  textSize(60);
+  text("Frog Feaster 3000", width / 2, height / 2 - 45);
+
+  //Instruction text
+  textSize(30);
+  text("Type 'filthyfrog' to begin", width / 2, height / 2 + 60);
+
+  //Illustrating what user typed so far
+  textSize(15);
+  text(typedText, width / 2, height / 2 + 100);
+}
+
+//Tracks keys pressed by user
+function keyTyped() {
+  // Add letters to typedText
+  typedText += key;
+
+  // Limit input to 10 characters to avoid overflow
+  if (typedText.length > 10) {
+    typedText = typedText.substring(typedText.length - 10);
+  }
+
+  // Check if they typed "frog"
+  if (typedText.toLowerCase().includes("frog")) {
+    gameState = "play"; // Start the game
+    typedText = ""; // Reset input
+  }
 }
 
 /**
