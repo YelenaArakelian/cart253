@@ -94,6 +94,8 @@ function preload() {
  */
 function setup() {
   createCanvas(640, 480);
+  textFont(Font);
+  textAlign(CENTER);
 
   // Give the fly its first random position
   resetFly();
@@ -198,7 +200,6 @@ function draw() {
     drawFrog();
     checkTongueFlyOverlap();
     moveFriendFrogEye();
-    image(frogGif, 200, 200, 150, 150);
   }
 }
 function drawTitleScreen() {
@@ -206,22 +207,22 @@ function drawTitleScreen() {
   background("#1d740aff");
 
   //Make frog gif appear above text
-  image(frogGif, width / 2 - 75, height / 2 + 100, 150, 150);
+  image(frogGif, width / 2 - 75, 330, 150, 150);
 
   //Center all text shown
   textAlign(CENTER);
 
   //Title text
   fill("#2fff00ff");
-  textSize(60);
-  text("Frog Feaster 3000", width / 2, height / 2 - 45);
+  textSize(100);
+  text("Frog Feaster 3000", width / 2 + 120, height / 2 - 40);
 
   //Instruction text
-  textSize(30);
+  textSize(40);
   text("Type 'filthyfrog' to begin", width / 2, height / 2 + 60);
 
   //Illustrating what user typed so far
-  textSize(15);
+  textSize(30);
   text(typedText, width / 2, height / 2 + 100);
 }
 
