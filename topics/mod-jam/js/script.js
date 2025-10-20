@@ -86,7 +86,7 @@ const fly = {
 
 function preload() {
   frogGif = loadImage("assets/images/frog.gif");
-  Font = loadFont("assets/fonts/HooeyDEMO-Regular.otf");
+  Font = loadFont("assets/fonts/TrashHand.TTF");
 }
 
 /**
@@ -214,16 +214,16 @@ function drawTitleScreen() {
 
   //Title text
   fill("#2fff00ff");
-  textSize(100);
-  text("Frog Feaster 3000", width / 2 + 120, height / 2 - 40);
+  textSize(90);
+  text("Frog Feaster 3000", width - 320, height / 2 - 50);
 
   //Instruction text
   textSize(40);
-  text("Type 'filthyfrog' to begin", width / 2, height / 2 + 60);
+  text("Type 'filthyfrog' to begin", width / 2, height / 2 + 40);
 
   //Illustrating what user typed so far
   textSize(30);
-  text(typedText, width / 2, height / 2 + 100);
+  text(typedText, width / 2, height / 2 + 90);
 }
 
 //Tracks keys pressed by user
