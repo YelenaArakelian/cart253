@@ -1,6 +1,6 @@
 /**
  * Frogfrogfrog
- * Pippin Barr
+ * Yelena Arakelian
  *
  * A game of catching flies with your frog-tongue
  *
@@ -8,6 +8,7 @@
  * - Move the frog with your mouse
  * - Click to launch the tongue
  * - Catch flies
+ * - Dodge the horseflies
  *
  * Made with p5
  * https://p5js.org/
@@ -20,6 +21,10 @@ let gameState = "title";
 let typedText = ""; //track what player types
 let frogVisible = false;
 let Font;
+let horseFlyIMG;
+let frogStrikes = 0;
+
+const MAX_STRIKES = 3;
 
 const friendFrogs = {
   left: {
@@ -56,6 +61,14 @@ const friendFrogs = {
   },
 };
 
+const horseFly = {
+  x: 0,
+  y: 100,
+  size: 90,
+  speed: 4, //how fast its going
+  show: true, //make it visible
+};
+
 // Our frog
 const frog = {
   // The frog's body has a position and size
@@ -64,6 +77,7 @@ const frog = {
     y: 520,
     size: 150,
   },
+
   // The frog's tongue has a position, size, speed, and state
   tongue: {
     x: undefined,
@@ -87,6 +101,7 @@ const fly = {
 function preload() {
   frogGif = loadImage("assets/images/frog.gif");
   Font = loadFont("assets/fonts/TrashHand.TTF");
+  horseFlyIMG = loadImage("assets/images/besthorseslfyever.png");
 }
 
 /**
@@ -199,9 +214,59 @@ function draw() {
     moveTongue();
     drawFrog();
     checkTongueFlyOverlap();
+    checkHorseFlyCollision();
     moveFriendFrogEye();
+    moveHorseFly();
+    drawhorseFly();
   }
 }
+
+function drawhorseFly() {
+  if (horseFly.show) {
+    push(); //Adding actual image
+    image(
+      horseFlyIMG,
+      horseFly.x - horseFly.size / 2,
+      horseFly.y - horseFly.size / 2,
+      horseFly.size,
+      horseFly.size
+    );
+    pop();
+    push();
+    fill(255, 0, 0);
+    textSize(24);
+    textAlign(LEFT);
+    text(`STRIKES: ${frogStrikes} / ${MAX_STRIKES}`, 10, 20); // Show strikes at top left
+    pop();
+  }
+}
+
+function checkHorseFlyCollision() {
+  const d = dist(frog.tongue.x, frog.tongue.y, horseFly.x, horseFly.y);
+  if (d < frog.tongue.size / 2 + horseFly.size / 2 && horseFly.show) {
+    frogStrikes++;
+    horseFly.show = false; //temporarily hide horsefly
+    horseFly.x = 0; //reset horsefly position
+    horseFly.y = random(100, 400); //reset position
+
+    //Examies if game over
+    if (frogStrikes >= MAX_STRIKES) {
+      gameState = "Game Over";
+    } else {
+      horseFly.show = true; //make horsefly visible again
+    }
+  }
+}
+
+function moveHorseFly() {
+  horseFly.x += horseFly.speed; //make it move faster
+
+  if (horseFly.x > width) {
+    horseFly.x = 0;
+    horseFly.y = random(100, 400);
+  }
+}
+
 function drawTitleScreen() {
   //Title screen background color
   background("#1d740aff");
@@ -215,11 +280,17 @@ function drawTitleScreen() {
   //Title text
   fill("#2fff00ff");
   textSize(90);
-  text("Frog Feaster 3000", width - 320, height / 2 - 50);
+  text("Frog Feaster 3000", width - 320, height / 2 - 120);
+
+  //Rules text
+  fill("#ff1b1bff");
+  textSize(45);
+  text("EAT THE FLIES, DODGE THEM HORSEFLIES!", width / 2, height / 2 - 30);
 
   //Instruction text
+  fill("#2fff00ff");
   textSize(40);
-  text("Type 'filthyfrog' to begin", width / 2, height / 2 + 40);
+  text("Type 'frog' to begin", width / 2, height / 2 + 40);
 
   //Illustrating what user typed so far
   textSize(30);
@@ -370,8 +441,6 @@ function resetFly() {
 function moveFrog() {
   frog.body.x = mouseX;
 }
-
-function eyeTracking() {}
 
 /**
  * Handles moving the tongue based on its state
