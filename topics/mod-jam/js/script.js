@@ -18,8 +18,7 @@
 
 let frogGif;
 let gameState = "title";
-let typedText = ""; //track what player types
-let frogVisible = false;
+let typedText = ""; // track what player types
 let Font;
 let horseFlyIMG;
 let frogStrikes = 0;
@@ -111,9 +110,8 @@ function setup() {
   createCanvas(640, 480);
   textFont(Font);
   textAlign(CENTER);
-
-  // Give the fly its first random position
-  resetFly();
+  resetFly(); //give the fly its first random
+  userStartAudio();
 }
 
 function drawBackground() {
@@ -202,6 +200,7 @@ function drawFriendFrog() {
 }
 
 function draw() {
+  // Title screen
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "play") {
@@ -218,6 +217,21 @@ function draw() {
     moveFriendFrogEye();
     moveHorseFly();
     drawhorseFly();
+
+    // Game over screen
+  } else if (gameState === "gameover") {
+    background("#360101ff");
+    fill("#ff0000");
+    textSize(100);
+    text("GAME OVER", width / 2, height / 2);
+    textSize(30);
+    text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 80);
+    textSize(18);
+    text(
+      "Click anywhere to return to the title screen, you loser!!!!",
+      width / 2,
+      height / 2 + 130
+    );
   }
 }
 
@@ -243,17 +257,17 @@ function drawhorseFly() {
 
 function checkHorseFlyCollision() {
   const d = dist(frog.tongue.x, frog.tongue.y, horseFly.x, horseFly.y);
+
   if (d < frog.tongue.size / 2 + horseFly.size / 2 && horseFly.show) {
     frogStrikes++;
-    horseFly.show = false; //temporarily hide horsefly
-    horseFly.x = 0; //reset horsefly position
-    horseFly.y = random(100, 400); //reset position
+    horseFly.show = false;
+    horseFly.x = 0;
+    horseFly.y = random(100, 400);
 
-    //Examies if game over
     if (frogStrikes >= MAX_STRIKES) {
-      gameState = "Game Over";
+      gameState = "gameover";
     } else {
-      horseFly.show = true; //make horsefly visible again
+      horseFly.show = true;
     }
   }
 }
