@@ -23,6 +23,12 @@ let Font;
 let horseFlyIMG;
 let frogStrikes = 0;
 
+// Declare a variable to hold the video element
+let video;
+
+// Boolean to track whether the video should be rendered onto the canvas
+let hide = false;
+
 const MAX_STRIKES = 3;
 
 const friendFrogs = {
@@ -101,6 +107,13 @@ function preload() {
   frogGif = loadImage("assets/images/frog.gif");
   Font = loadFont("assets/fonts/TrashHand.TTF");
   horseFlyIMG = loadImage("assets/images/besthorseslfyever.png");
+
+  // Create a <video></video> element for playback and remove it from the DOM
+  video = createVideo("assets/videos/DistractionFlashbang.webm");
+  video.hide();
+
+  // Attach an event listener for when the playback ends setting hide to true
+  video.elt.addEventListener("ended", () => (hide = true));
 }
 
 /**
@@ -112,6 +125,15 @@ function setup() {
   textAlign(CENTER);
   resetFly(); //give the fly its first random
   userStartAudio();
+
+  // Every 8 seconds, ensure the video is visible and start playback
+  // if the game is in the "play" state and the video is currently paused
+  setInterval(() => {
+    hide = false;
+    if (video.elt.paused && gameState === "play") {
+      video.play();
+    }
+  }, 8000);
 }
 
 function drawBackground() {
@@ -217,6 +239,10 @@ function draw() {
     moveFriendFrogEye();
     moveHorseFly();
     drawhorseFly();
+    // Render each images frame by frame of the video based on the value of hide
+    if (!hide) {
+      image(video, 0, 0, width, height);
+    }
 
     // Game over screen
   } else if (gameState === "gameover") {
@@ -237,7 +263,7 @@ function draw() {
 
 function drawhorseFly() {
   if (horseFly.show) {
-    push(); //Adding actual image
+    push(); // Adding actual image
     image(
       horseFlyIMG,
       horseFly.x - horseFly.size / 2,
@@ -273,7 +299,7 @@ function checkHorseFlyCollision() {
 }
 
 function moveHorseFly() {
-  horseFly.x += horseFly.speed; //make it move faster
+  horseFly.x += horseFly.speed; // Make it move faster
 
   if (horseFly.x > width) {
     horseFly.x = 0;
@@ -311,7 +337,7 @@ function drawTitleScreen() {
   text(typedText, width / 2, height / 2 + 90);
 }
 
-//Tracks keys pressed by user
+// Tracks keys pressed by user
 function keyTyped() {
   // Add letters to typedText
   typedText += key;
