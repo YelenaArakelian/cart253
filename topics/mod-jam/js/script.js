@@ -22,6 +22,7 @@ let typedText = ""; // track what player types
 let Font;
 let horseFlyIMG;
 let frogStrikes = 0;
+let mySound; // plays background music
 
 // Declare a variable to hold the video element
 let video;
@@ -107,6 +108,7 @@ function preload() {
   frogGif = loadImage("assets/images/frog.gif");
   Font = loadFont("assets/fonts/TrashHand.TTF");
   horseFlyIMG = loadImage("assets/images/besthorseslfyever.png");
+  mySound = loadSound("assets/sounds/BackgroundMusic.mp3");
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -125,6 +127,8 @@ function setup() {
   textAlign(CENTER);
   resetFly(); //give the fly its first random
   userStartAudio();
+  mySound.loop(); // background music loops
+  mySound.setVolume(0.2); // set volume of music
 
   // Every 8 seconds, ensure the video is visible and start playback
   // if the game is in the "play" state and the video is currently paused
@@ -319,18 +323,24 @@ function drawTitleScreen() {
 
   //Title text
   fill("#2fff00ff");
-  textSize(90);
-  text("Frog Feaster 3000", width - 320, height / 2 - 120);
+  textSize(100);
+  text("Frog Feaster 3000", width - 320, height / 2 - 140);
 
   //Rules text
+  fill("#d9ff00ff");
+  textSize(30);
+  text("Use the left mouse click to launch tongue", width / 2, height / 2 - 90);
+  text("Move the frog with your mouse", width / 2, height / 2 - 40);
+
+  //Warning text
   fill("#ff1b1bff");
   textSize(45);
-  text("EAT THE FLIES, DODGE THEM HORSEFLIES!", width / 2, height / 2 - 30);
+  text("EAT THE FLIES, DODGE THEM HORSEFLIES!", width / 2, height / 2 + 5);
 
   //Instruction text
   fill("#2fff00ff");
   textSize(40);
-  text("Type 'frog' to begin", width / 2, height / 2 + 40);
+  text("Type 'frog' to begin", width / 2, height / 2 + 50);
 
   //Illustrating what user typed so far
   textSize(30);
@@ -352,6 +362,13 @@ function keyTyped() {
     gameState = "play"; // Start the game
     typedText = ""; // Reset input
   }
+
+  // Reset horsefly and strikes when restarting
+  horseFly.x = 0;
+  horseFly.y = random(100, 400);
+  horseFly.show = true;
+  frogStrikes = 0;
+  hide = false; // Resets distraction video
 }
 
 /**
@@ -566,5 +583,16 @@ function checkTongueFlyOverlap() {
 function mousePressed() {
   if (frog.tongue.state === "idle") {
     frog.tongue.state = "outbound";
+  }
+  // Start background music only once
+  if (!mySound.isPlaying()) {
+    mySound.loop();
+    mySound.setVolume(0.2);
+  }
+
+  // If the game is over and player clicks, return to title
+  if (gameState === "gameover") {
+    frogStrikes = 0;
+    gameState = "title";
   }
 }
