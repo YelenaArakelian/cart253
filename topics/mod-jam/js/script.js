@@ -133,6 +133,7 @@ function setup() {
   // Every 8 seconds, ensure the video is visible and start playback
   // if the game is in the "play" state and the video is currently paused
   setInterval(() => {
+   if (gameState === "play") {
     hide = false;
     if (video.elt.paused && gameState === "play") {
       video.play();
