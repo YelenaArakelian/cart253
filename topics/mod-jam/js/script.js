@@ -575,6 +575,11 @@ function checkTongueFlyOverlap() {
     // Bring back the tongue
     frog.tongue.state = "inbound";
   }
+
+  // Make the frog grow a bit when it eats a fly
+  if (eaten) {
+    frog.body.size += 30;
+  }
 }
 
 /**
