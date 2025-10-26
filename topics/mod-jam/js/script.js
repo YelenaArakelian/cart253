@@ -25,6 +25,8 @@ let frogStrikes = 0;
 let mySound; // plays background music
 let tongueGif;
 let illusionflyGif;
+let pepescreamGif;
+let pepebonkGif;
 
 // Declare a variable to hold the video element
 let video;
@@ -115,6 +117,8 @@ function preload() {
   mySound = loadSound("assets/sounds/MeepcityBackgroundmusic.mp3");
   tongueGif = loadImage("assets/images/tongue.gif");
   illusionflyGif = loadImage("assets/images/illusionfly.gif");
+  pepescreamGif = loadImage("assets/images/pepescream.gif");
+  pepebonkGif = loadImage("assets/images/pepebonk.gif");
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -260,16 +264,21 @@ function draw() {
     // Game over screen
   } else if (gameState === "gameover") {
     background("#360101ff");
+
+    image(pepescreamGif, width / 2 - 300, height / 2 - 30, 150, 150); // on the left
+
+    image(pepebonkGif, width / 2 + 170, height / 2 - 30, 150, 150); // on the right
+
     fill("#ff0000");
-    textSize(100);
-    text("GAME OVER", width / 2, height / 2);
-    textSize(30);
-    text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 80);
+    textSize(150);
+    text("GAME OVER", width / 2, height / 2 - 90);
+    textSize(50);
+    text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 20);
     textSize(30);
     text(
       "Press ctrl R key to return to the title screen, you loser!!!!",
       width / 2,
-      height / 2 + 130
+      height / 2 + 200
     );
   }
 }
