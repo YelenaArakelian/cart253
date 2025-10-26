@@ -26,6 +26,8 @@ let mySound; // plays background music
 
 // Declare a variable to hold the video element
 let video;
+let videoX = 0;
+let videoY = 0;
 
 // Boolean to track whether the video should be rendered onto the canvas
 let hide = false;
@@ -108,7 +110,7 @@ function preload() {
   frogGif = loadImage("assets/images/frog.gif");
   Font = loadFont("assets/fonts/TrashHand.TTF");
   horseFlyIMG = loadImage("assets/images/besthorseslfyever.png");
-  mySound = loadSound("assets/sounds/BackgroundMusic.mp3");
+  mySound = loadSound("assets/sounds/MeepcityBackgroundmusic.mp3");
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -128,17 +130,20 @@ function setup() {
   resetFly(); //give the fly its first random
   userStartAudio();
   mySound.loop(); // background music loops
-  mySound.setVolume(0.2); // set volume of music
+  mySound.setVolume(0.1); // set volume of music
 
   // Every 8 seconds, ensure the video is visible and start playback
   // if the game is in the "play" state and the video is currently paused
   setInterval(() => {
-   if (gameState === "play") {
-    hide = false;
-    if (video.elt.paused && gameState === "play") {
-      video.play();
+    console.log("Interval triggered");
+    if (gameState === "play") {
+      console.log("Playing distraction video");
+      hide = false; // show video
+      videoX = random(0, width - 480); // random x
+      videoY = random(0, height - 280); // random y
+      video.play(); // play video
     }
-  }, 8000);
+  }, 16000);
 }
 
 function drawBackground() {
@@ -244,9 +249,10 @@ function draw() {
     moveFriendFrogEye();
     moveHorseFly();
     drawhorseFly();
-    // Render each images frame by frame of the video based on the value of hide
+
+    // Render each images frame by frame of the video based on the value of hide at random positions
     if (!hide) {
-      image(video, 0, 0, width, height);
+      image(video, videoX, videoY, 440, 280);
     }
 
     // Game over screen
@@ -257,9 +263,9 @@ function draw() {
     text("GAME OVER", width / 2, height / 2);
     textSize(30);
     text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 80);
-    textSize(18);
+    textSize(30);
     text(
-      "Click anywhere to return to the title screen, you loser!!!!",
+      "Press ctrl R key to return to the title screen, you loser!!!!",
       width / 2,
       height / 2 + 130
     );
@@ -369,7 +375,7 @@ function keyTyped() {
   horseFly.y = random(100, 400);
   horseFly.show = true;
   frogStrikes = 0;
-  hide = false; // Resets distraction video
+  frog.body.size = 150; // Reset frog to original size
 }
 
 /**
@@ -593,12 +599,6 @@ function mousePressed() {
   // Start background music only once
   if (!mySound.isPlaying()) {
     mySound.loop();
-    mySound.setVolume(0.2);
-  }
-
-  // If the game is over and player clicks, return to title
-  if (gameState === "gameover") {
-    frogStrikes = 0;
-    gameState = "title";
+    mySound.setVolume(0.1);
   }
 }
