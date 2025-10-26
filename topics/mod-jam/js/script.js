@@ -27,6 +27,8 @@ let tongueGif;
 let illusionflyGif;
 let pepescreamGif;
 let pepebonkGif;
+let croakSound; // plays when milestone hit
+let fliesEaten = 0; // tracks flies eaten for milestones
 
 // Declare a variable to hold the video element
 let video;
@@ -114,11 +116,12 @@ function preload() {
   frogGif = loadImage("assets/images/frog.gif");
   Font = loadFont("assets/fonts/TrashHand.TTF");
   horseFlyIMG = loadImage("assets/images/besthorseslfyever.png");
-  mySound = loadSound("assets/sounds/MeepcityBackgroundmusic.mp3");
+  mySound = loadSound("assets/sounds/MeepcityBackgroundmusic.mp3"); // background music
   tongueGif = loadImage("assets/images/tongue.gif");
   illusionflyGif = loadImage("assets/images/illusionfly.gif");
   pepescreamGif = loadImage("assets/images/pepescream.gif");
   pepebonkGif = loadImage("assets/images/pepebonk.gif");
+  croakSound = loadSound("assets/sounds/croaking.mp3"); // croak sound
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -391,6 +394,7 @@ function keyTyped() {
   horseFly.show = true;
   frogStrikes = 0;
   frog.body.size = 150; // Reset frog to original size
+  fliesEaten = 0; // Reset flies eaten
 }
 
 /**
@@ -586,21 +590,23 @@ function drawFrog() {
 /**
  * Handles the tongue overlapping the fly
  */
-function checkTongueFlyOverlap() {
-  // Get distance from tongue to fly
-  const d = dist(frog.tongue.x, frog.tongue.y, fly.x, fly.y);
-  // Check if it's an overlap
-  const eaten = d < frog.tongue.size / 2 + fly.size / 2;
-  if (eaten) {
-    // Reset the fly
-    resetFly();
-    // Bring back the tongue
-    frog.tongue.state = "inbound";
-  }
 
-  // Make the frog grow a bit when it eats a fly
+function checkTongueFlyOverlap() {
+  const d = dist(frog.tongue.x, frog.tongue.y, fly.x, fly.y);
+  const eaten = d < frog.tongue.size / 2 + fly.size / 2;
+
   if (eaten) {
-    frog.body.size += 30;
+    fliesEaten++;
+    resetFly();
+    frog.tongue.state = "inbound";
+    frog.body.size += 30; // grows frog every fly eaten
+
+    // frogs croaking sound every 5 flies eaten
+    if (fliesEaten % 5 === 0 && fliesEaten > 0) {
+      if (!croakSound.isPlaying()) {
+        croakSound.play();
+      }
+    }
   }
 }
 
