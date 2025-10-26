@@ -23,6 +23,8 @@ let Font;
 let horseFlyIMG;
 let frogStrikes = 0;
 let mySound; // plays background music
+let tongueGif;
+let illusionflyGif;
 
 // Declare a variable to hold the video element
 let video;
@@ -111,6 +113,8 @@ function preload() {
   Font = loadFont("assets/fonts/TrashHand.TTF");
   horseFlyIMG = loadImage("assets/images/besthorseslfyever.png");
   mySound = loadSound("assets/sounds/MeepcityBackgroundmusic.mp3");
+  tongueGif = loadImage("assets/images/tongue.gif");
+  illusionflyGif = loadImage("assets/images/illusionfly.gif");
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -135,9 +139,7 @@ function setup() {
   // Every 8 seconds, ensure the video is visible and start playback
   // if the game is in the "play" state and the video is currently paused
   setInterval(() => {
-    console.log("Interval triggered");
     if (gameState === "play") {
-      console.log("Playing distraction video");
       hide = false; // show video
       videoX = random(0, width - 480); // random x
       videoY = random(0, height - 280); // random y
@@ -322,8 +324,12 @@ function drawTitleScreen() {
   //Title screen background color
   background("#1d740aff");
 
-  //Make frog gif appear above text
-  image(frogGif, width / 2 - 75, 330, 150, 150);
+  //Make frogs gif appear under text
+  image(frogGif, width / 2 + 150, 330, 150, 150); //right frog gif
+
+  image(illusionflyGif, width / 2 - 300, 10, 900, 900); //illusion fly gif
+
+  image(tongueGif, width / 2 - 300, 330, 150, 150); //tongue gif
 
   //Center all text shown
   textAlign(CENTER);
@@ -350,7 +356,7 @@ function drawTitleScreen() {
   text("Type 'frog' to begin", width / 2, height / 2 + 50);
 
   //Illustrating what user typed so far
-  textSize(30);
+  textSize(50);
   text(typedText, width / 2, height / 2 + 90);
 }
 
