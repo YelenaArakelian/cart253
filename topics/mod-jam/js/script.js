@@ -372,29 +372,28 @@ function drawTitleScreen() {
   text(typedText, width / 2, height / 2 + 90);
 }
 
+function keyPressed() {
+  if (keyCode === BACKSPACE) {
+    typedText = typedText.slice(0, -1);
+    return false;
+  }
+}
+
+function isPrintable(k) {
+  return k.length === 1 && k.charCodeAt(0) >= 32 && k.charCodeAt(0) <= 126;
+}
+
 // Tracks keys pressed by user
 function keyTyped() {
-  // Add letters to typedText
-  typedText += key;
-
-  // Limit input to 10 characters to avoid overflow
-  if (typedText.length > 10) {
-    typedText = typedText.substring(typedText.length - 10);
+  if (isPrintable(key)) {
+    typedText += key;
   }
 
   // Check if they typed "frog"
-  if (typedText.toLowerCase().includes("frog")) {
+  if (typedText.toLowerCase() === "frog") {
     gameState = "play"; // Start the game
     typedText = ""; // Reset input
   }
-
-  // Reset horsefly and strikes when restarting
-  horseFly.x = 0;
-  horseFly.y = random(100, 400);
-  horseFly.show = true;
-  frogStrikes = 0;
-  frog.body.size = 150; // Reset frog to original size
-  fliesEaten = 0; // Reset flies eaten
 }
 
 /**
