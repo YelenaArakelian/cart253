@@ -33,6 +33,7 @@ let confettiGif; // shown when milestone hit
 let showConfetti = false; // whether to show confetti
 let confettiTimer = 0; // timer for confetti display
 let rageLevel = 0; //increases when user hits horsefly
+let mlemSound; // plays eating sound effect when frog eats a fly
 
 // Declare a variable to hold the video element
 let video;
@@ -127,6 +128,7 @@ function preload() {
   pepebonkGif = loadImage("assets/images/pepebonk.gif");
   croakSound = loadSound("assets/sounds/croaking.mp3"); // croak sound when milestone hit
   confettiGif = loadImage("assets/images/confetti.gif"); // shown when milestone hit
+  mlemSound = loadSound("assets/sounds/mlem.mp3"); // eating sound effect
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -630,6 +632,11 @@ function checkTongueFlyOverlap() {
     resetFly();
     frog.tongue.state = "inbound";
     frog.body.size += 30; // grows frog every fly eaten
+
+    // Play eating sound effect
+    if (!mlemSound.isPlaying()) {
+      mlemSound.play();
+    }
 
     // Only trigger milestone effects every 5 flies
     if (fliesEaten % 5 === 0) {
