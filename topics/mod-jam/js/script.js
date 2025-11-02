@@ -29,6 +29,7 @@ let pepescreamGif;
 let pepebonkGif;
 let croakSound; // plays when milestone hit
 let fliesEaten = 0; // tracks flies eaten for milestones
+let confettiGif; // shown when milestone hit
 
 // Declare a variable to hold the video element
 let video;
@@ -302,6 +303,14 @@ function drawhorseFly() {
     textSize(24);
     textAlign(LEFT);
     text(`STRIKES: ${frogStrikes} / ${MAX_STRIKES}`, 10, 20); // Show strikes at top left
+    pop();
+
+    //Show number of flies eaten
+    push();
+    fill("#0400ffff");
+    textSize(24);
+    textAlign(RIGHT, TOP);
+    text(`FLIES EATEN: ${fliesEaten}`, width - 10, 10);
     pop();
   }
 }
