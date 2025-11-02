@@ -4,103 +4,55 @@
 
 The initial idea:
 
-> Frog eating flies
+> Frog eating flies while avoiding horseflies and distractions.
 
 ## Experience design
 
 The experience:
 
-> The user controls a frog at the bottom of the screen, they can shoot out the frog's tongue and catch a fly which is moving on the screen. If the tongue hits the fly it gets eaten.
+> The player controls a frog at the bottom of the screen. By clicking, they launch its tongue to catch moving flies while avoiding a dangerous horsefly. Every five flies caught triggers a milestone with a croak sound, confetti animation, and increased difficulty.
 
 ## Breaking it down
 
 Basic things to do:
 
-- Draw the frog (image? a circle?)
-- Draw the tongue...
-- Move the frog (how? mouse? keyboard? breathing?)
-- Move the fly (in line? buzzing around? random?)
-- Figure out if the tongue hits the fly?
+- **What does the frog look like?**
+  - Cartooned frog that grows slightly each time it eats a fly.
+- **How does the user control the frog?**
+  - Follows the mouse horizontally, left click launches tongue.
+- **How does the fly move?**
+  - Flies appear randomly and move across the screen; horsefly becomes faster each milestone.
+- **What happens on milestones?**
+  - Frog croaks, confetti plays, horsefly shakes in rage.
+- **What happens if the frog is hit?**
+  - When user hits horsefly after 3 strikes, the game ends.
 
-Questions:
+# The program structure
 
-- What does the frog look like?
-    - Circles!
-- How does the user control the frog?
-    - User controls frog with the mouse position, just to the left and right
-    - User launches the tongue with a mouse click
-- How does the fly move?
-    - The fly starts on the left at a random y position, and moves to the right in a line
-- What does the tongue look like?
-    - A red line coming out of the frog...
-- What happens if the user doesn't catch the fly?
-    - If the fly goes off the right side, it just resets to a new random y on the left
-- What does it all look like on the screen? Layout?
-    - Frog at the bottom, fly moving across, tongue shooting out of frog
+## Elements
 
-## The program starts to form....
+- **Frog**
+  - Position, size (growth over time)
+  - Tongue position, speed, and state
+- **Fly**
+  - Position, speed, respawn behavior
+- **Horsefly**
+  - Position, speed, rage level (increases every 5 flies)
+- **Game State**
 
-What is there?
+  - `title`, `play`, `gameover`
+  - Counters for flies eaten and strikes
+  - Confetti and sound triggers
 
-- The frog
-    - Position and size
-    - Position and size of tongue
-    - What is the tongue doing?
-- The fly
-    - Position and the size
-    - Velocity
+  ### Flow
 
-```
-frog
-    body
-        x
-        y
-        size
-    tongue
-        x
-        y
-        size
-        speed
-        state
-
-fly
-    x
-    y
-    size
-    speed
-```
-
-What happens in this project?
-
-- Start (setup)
-    - Create a canvas
-    
-- Every frame (draw)
-    - Draw the background
-    - Move and draw the fly
-        - Add the fly's speed to it x
-        - Draw a circle at the fly's position with its size (black)
-    - Move and draw the frog
-        - Move the frog to the mouse's x position
-        - Draw a green circle at the frog's position with its size
-    - Move and draw the tongue
-        - Move the tongue
-            - If the tongue isn't launched, just do nothing... don't draw it
-            - If the tongue is launched, move it up (by its speed)
-            - If the tongue is coming back, move it down (by its speed)
-            - If the tongue hits the top, send it back down
-            - If the tongue gets back to the frog, then stop it
-        - Draw the tongue
-            - Draw a line from the frog to the tongue position
-            - Draw a circle at the end of the tongue
-    - Check if the tongue hit the fly
-        - Check if tongue circle and fly circle overlap
-        - If they do, then reset the fly
-        - If they don't.... nothing... just keep being a tongue
-
-Events
-
-- If the user clicks the mouse
-    - If the tongue is still inside the frog's mouth
-        - Launch the tongue
-
+- **Setup**
+  - Create canvas, load assets (images, sounds, video)
+- **Every Frame (Draw)**
+  - Draw background and elements
+  - Move frog, tongue, flies, and horsefly
+  - Check collisions and update score or strikes
+  - Trigger milestone effects (croak, confetti, rage)
+- **Events**
+  - Mouse click → launch tongue if ready
+  - Collision → update game state or reset elements
