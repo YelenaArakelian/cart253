@@ -297,7 +297,7 @@ function draw() {
     text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 20);
     textSize(30);
     text(
-      "Press ctrl R key to return to the title screen, you loser!!!!",
+      "Ctrl+R to restart your frog life, idiot!!",
       width / 2,
       height / 2 + 200
     );
