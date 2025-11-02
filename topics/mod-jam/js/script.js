@@ -34,6 +34,7 @@ let showConfetti = false; // whether to show confetti
 let confettiTimer = 0; // timer for confetti display
 let rageLevel = 0; //increases when user hits horsefly
 let mlemSound; // plays eating sound effect when frog eats a fly
+let hurtSound; // plays when frog eats horsefly
 
 // Declare a variable to hold the video element
 let video;
@@ -128,7 +129,8 @@ function preload() {
   pepebonkGif = loadImage("assets/images/pepebonk.gif");
   croakSound = loadSound("assets/sounds/croaking.mp3"); // croak sound when milestone hit
   confettiGif = loadImage("assets/images/confetti.gif"); // shown when milestone hit
-  mlemSound = loadSound("assets/sounds/mlem.mp3"); // eating sound effect
+  mlemSound = loadSound("assets/sounds/mlem.mp3"); // eating sound effect when fly is eaten
+  hurtSound = loadSound("assets/sounds/hurt.mp3"); // hurt sound effect when horsefly is eaten
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -344,6 +346,12 @@ function checkHorseFlyCollision() {
 
   if (d < frog.tongue.size / 2 + horseFly.size / 2 && horseFly.show) {
     frogStrikes++;
+
+    // Play hurt sound effect when horsefly is eaten
+    if (!hurtSound.isPlaying()) {
+      hurtSound.play();
+    }
+
     horseFly.show = false;
     horseFly.x = 0;
     horseFly.y = random(100, 400);
@@ -631,9 +639,9 @@ function checkTongueFlyOverlap() {
     fliesEaten++;
     resetFly();
     frog.tongue.state = "inbound";
-    frog.body.size += 30; // grows frog every fly eaten
+    frog.body.size += 20; // grows frog every fly eaten
 
-    // Play eating sound effect
+    // Play eating sound effect when fly is eaten
     if (!mlemSound.isPlaying()) {
       mlemSound.play();
     }
@@ -644,6 +652,9 @@ function checkTongueFlyOverlap() {
       if (!croakSound.isPlaying()) {
         croakSound.play();
       }
+
+      // Increase the horseFly speed every milestone hit
+      horseFly.speed += 1;
 
       // Increase rage intensity, capped at 10
       rageLevel = min(rageLevel + 1, 10);
