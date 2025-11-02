@@ -152,7 +152,7 @@ function setup() {
   mySound.loop(); // background music loops
   mySound.setVolume(0.1); // set volume of music
 
-  // Every 8 seconds, ensure the video is visible and start playback
+  // Every 16 seconds, ensure the video is visible and start playback
   // if the game is in the "play" state and the video is currently paused
   setInterval(() => {
     if (gameState === "play") {
