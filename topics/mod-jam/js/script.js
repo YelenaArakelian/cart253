@@ -30,6 +30,9 @@ let pepebonkGif;
 let croakSound; // plays when milestone hit
 let fliesEaten = 0; // tracks flies eaten for milestones
 let confettiGif; // shown when milestone hit
+let showConfetti = false; // whether to show confetti
+let confettiTimer = 0; // timer for confetti display
+let rageLevel = 0; //increases when user hits horsefly
 
 // Declare a variable to hold the video element
 let video;
@@ -122,7 +125,8 @@ function preload() {
   illusionflyGif = loadImage("assets/images/illusionfly.gif");
   pepescreamGif = loadImage("assets/images/pepescream.gif");
   pepebonkGif = loadImage("assets/images/pepebonk.gif");
-  croakSound = loadSound("assets/sounds/croaking.mp3"); // croak sound
+  croakSound = loadSound("assets/sounds/croaking.mp3"); // croak sound when milestone hit
+  confettiGif = loadImage("assets/images/confetti.gif"); // shown when milestone hit
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -260,6 +264,15 @@ function draw() {
     moveHorseFly();
     drawhorseFly();
 
+    // Draw confetti if milestone hit
+    drawConfetti();
+    if (showConfetti) {
+      confettiTimer--;
+      if (confettiTimer <= 0) {
+        showConfetti = false;
+      }
+    }
+
     // Render each images frame by frame of the video based on the value of hide at random positions
     if (!hide) {
       image(video, videoX, videoY, 440, 280);
@@ -289,23 +302,32 @@ function draw() {
 
 function drawhorseFly() {
   if (horseFly.show) {
-    push(); // Adding actual image
+    push();
+
+    // Calculate shaking offset based on rage level
+    let shakeX = random(-rageLevel * 2, rageLevel * 2);
+    let shakeY = random(-rageLevel * 2, rageLevel * 2);
+
+    // Apply shaking offsets when drawing
     image(
       horseFlyIMG,
-      horseFly.x - horseFly.size / 2,
-      horseFly.y - horseFly.size / 2,
+      horseFly.x - horseFly.size / 2 + shakeX,
+      horseFly.y - horseFly.size / 2 + shakeY,
       horseFly.size,
       horseFly.size
     );
+
     pop();
+
+    // Show strikes at top left
     push();
     fill(255, 0, 0);
     textSize(24);
     textAlign(LEFT);
-    text(`STRIKES: ${frogStrikes} / ${MAX_STRIKES}`, 10, 20); // Show strikes at top left
+    text(`STRIKES: ${frogStrikes} / ${MAX_STRIKES}`, 10, 20);
     pop();
 
-    //Show number of flies eaten
+    // Show number of flies eaten
     push();
     fill("#0400ffff");
     textSize(24);
@@ -609,12 +631,28 @@ function checkTongueFlyOverlap() {
     frog.tongue.state = "inbound";
     frog.body.size += 30; // grows frog every fly eaten
 
-    // frogs croaking sound every 5 flies eaten
-    if (fliesEaten % 5 === 0 && fliesEaten > 0) {
+    // Only trigger milestone effects every 5 flies
+    if (fliesEaten % 5 === 0) {
+      // Play croak sound
       if (!croakSound.isPlaying()) {
         croakSound.play();
       }
+
+      // Increase rage intensity, capped at 10
+      rageLevel = min(rageLevel + 1, 10);
+
+      // Show confetti for a short time
+      showConfetti = true;
+      confettiTimer = 60; // frames (~1 second if 60fps)
     }
+  }
+}
+
+function drawConfetti() {
+  if (showConfetti) {
+    push();
+    image(confettiGif, width / 2 - 400, 400 - 150, 800, 300);
+    pop();
   }
 }
 
