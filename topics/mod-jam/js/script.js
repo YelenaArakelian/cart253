@@ -32,6 +32,16 @@ let confettiTimer = 0; // timer for confetti display
 let rageLevel = 0; //increases when user hits horsefly
 let mlemSound; // plays eating sound effect when frog eats a fly
 let hurtSound; // plays when frog eats horsefly
+let nightmareScore = 0;
+let nightmareTimerLeft = 30; // seconds
+let spotlightX = 0;
+let spotlightY = 0;
+let spotlightRadius = 100; // radius of spotlight
+let nightmareFrog = {
+  x: 300,
+  y: 300,
+  size: 60,
+};
 
 // Declare a variable to hold the video element
 let video;
