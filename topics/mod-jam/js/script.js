@@ -42,9 +42,204 @@ let videoY = 0;
 let hide = false;
 
 /*******************************
- * MODE + MENU SYSTEM
- * (Handles switching between different game modes and menus)
+ * TITLE MENU SCREEN
+ * (Handles the title screen and its interactions)
  *******************************/
+
+// Classic Feast
+let classicModeName = "Classic Feast";
+let classicDescriptionLine1 = "The original Frog Feaster";
+let classicDescriptionLine2 = "Eat flies and avoid horseflies";
+let classicDescriptionLine3 = "Move with mouse, click to shoot tongue";
+
+// Nightmare Spotlight
+let nightmareModeName = "Nightmare Spotlight";
+let nightmareDescriptionLine1 = "The whole screen is dark";
+let nightmareDescriptionLine2 = "The flashlight follows your mouse";
+
+// Horsefly Revenge
+let horseflyModeName = "Horsefly Revenge";
+let horseflyDescriptionLine1 = "You play as the horsefly";
+let horseflyDescriptionLine2 = "Avoid the frog’s giant tongue!";
+let horseflyDescriptionLine3 = "Move with mouse";
+
+// Buttons on the left side of the title screen
+let menuButtonX = 60;
+let menuButtonY_Classic = 200;
+let menuButtonY_Nightmare = 280;
+let menuButtonY_Horsefly = 360;
+let menuButtonWidth = 260;
+let menuButtonHeight = 60;
+
+// Which mode the mouse is currently hovering on
+let menuHoverMode = ""; // "classic", "nightmare", or "horsefly"
+
+/*******************************
+ * TITLE SCREEN DRAWING
+ *******************************/
+
+function drawTitleScreen() {
+  // Title screen background color
+  background("#1d740aff");
+
+  // Fun gifs around the screen
+  image(frogGif, width - 140, 50, 120, 120); // frog top right
+  image(illusionflyGif, width - 140, 400, 190, 100); // big bottom right illusion fly
+  image(tongueGif, 20, 80, 120, 120); // tongue frog top left
+
+  // Make sure text has no outline
+  noStroke();
+
+  // Big title
+  textAlign(CENTER, CENTER);
+  fill("#2fff00ff");
+  textSize(70);
+  text("Frog Feaster 3000", width / 2, 70);
+
+  // Subtitle
+  fill("#5ef4ffff");
+  textSize(34);
+  text("Choose your feast mode", width / 2, 140);
+
+  // Reset hover each frame
+  menuHoverMode = "";
+
+  // Draw the 3 buttons on the left
+  drawMenuButton(
+    menuButtonX,
+    menuButtonY_Classic,
+    menuButtonWidth,
+    menuButtonHeight,
+    classicModeName,
+    "classic"
+  );
+
+  drawMenuButton(
+    menuButtonX,
+    menuButtonY_Nightmare,
+    menuButtonWidth,
+    menuButtonHeight,
+    nightmareModeName,
+    "nightmare"
+  );
+
+  drawMenuButton(
+    menuButtonX,
+    menuButtonY_Horsefly,
+    menuButtonWidth,
+    menuButtonHeight,
+    horseflyModeName,
+    "horsefly"
+  );
+
+  // Small instruction box beside hovered button
+  drawInstructionPopup();
+}
+
+/*******************************
+ * BUTTON + SMALL POPUP
+ *******************************/
+
+function drawMenuButton(x, y, w, h, label, modeName) {
+  // Check if mouse is on this button
+  let isHover =
+    mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
+
+  if (isHover) {
+    menuHoverMode = modeName; // set hover mode
+    fill("#b9ffb9ff"); // hover color
+  } else {
+    fill("#e5e5e5");
+  }
+
+  // Button rectangle
+  stroke(0);
+  strokeWeight(3);
+  rect(x, y, w, h, 10);
+
+  // Button text
+  noStroke();
+  fill(0);
+  textAlign(CENTER, CENTER);
+  textSize(20);
+  text(label, x + w / 2, y + h / 2);
+}
+
+// Little instruction box next to hovered button
+function drawInstructionPopup() {
+  // If mouse is not on any button, don't draw anything
+  if (menuHoverMode === "") {
+    return;
+  }
+
+  // Box slightly smaller than a button
+  let popupWidth = menuButtonWidth - 40;
+  let popupHeight = menuButtonHeight;
+
+  // Position: to the right of the buttons
+  let popupX = menuButtonX + menuButtonWidth + 20;
+  let popupY;
+
+  if (menuHoverMode === "classic") {
+    popupY = menuButtonY_Classic;
+  } else if (menuHoverMode === "nightmare") {
+    popupY = menuButtonY_Nightmare;
+  } else if (menuHoverMode === "horsefly") {
+    popupY = menuButtonY_Horsefly;
+  }
+
+  // Background of the small box
+  fill("#d5e4fdff");
+  noStroke();
+  rect(popupX, popupY, popupWidth, popupHeight, 10);
+
+  // Border of the small box
+  stroke("#61f787ff");
+  strokeWeight(3);
+  noFill();
+  rect(popupX, popupY, popupWidth, popupHeight, 10);
+
+  // Text inside the small box
+  noStroke();
+  textAlign(LEFT, TOP);
+
+  let textX = popupX + 8;
+  let textY = popupY + 6;
+
+  // Title (INSTRUCTIONS)
+  fill("#356f3bff");
+  textSize(12);
+  text("Instructions", textX, textY);
+  textY += 14;
+
+  // Description text inside the boxes
+  fill("#183ad2ff");
+  textSize(11);
+
+  if (menuHoverMode === "classic") {
+    text(classicDescriptionLine1, textX, textY);
+    textY += 12;
+    text(classicDescriptionLine2, textX, textY);
+    textY += 12;
+    text(classicDescriptionLine3, textX, textY);
+  } else if (menuHoverMode === "nightmare") {
+    text(nightmareDescriptionLine1, textX, textY);
+    textY += 12;
+    text(nightmareDescriptionLine2, textX, textY);
+  } else if (menuHoverMode === "horsefly") {
+    text(horseflyDescriptionLine1, textX, textY);
+    textY += 12;
+    text(horseflyDescriptionLine2, textX, textY);
+    textY += 12;
+    text(horseflyDescriptionLine3, textX, textY);
+  }
+}
+
+/*******************************
+ * CLASSIC FROG FEASTER MODE
+ *******************************/
+
+// Friend frogs structure
 
 const MAX_STRIKES = 3;
 const friendFrogs = {
@@ -146,7 +341,7 @@ function preload() {
 }
 
 /*******************************
- * SETUP
+ * SETUP FUNCTION
  *******************************/
 function setup() {
   createCanvas(640, 480);
@@ -171,7 +366,7 @@ function setup() {
 
 /*******************************
  * DRAW LOOP
- * (Switches between menu, modes, and gameover screen)
+ * (Switches between menu, modes and gameover screen)
  *******************************/
 
 function draw() {
@@ -214,7 +409,6 @@ function draw() {
     background("#360101ff");
 
     image(pepescreamGif, width / 2 - 300, height / 2 - 30, 150, 150); // on the left
-
     image(pepebonkGif, width / 2 + 170, height / 2 - 30, 150, 150); // on the right
 
     fill("#ff0000");
@@ -230,10 +424,6 @@ function draw() {
     );
   }
 }
-
-/*******************************
- * MENU SCREEN FUNCTIONS
- *******************************/
 
 /*******************************
  * CLASSIC MODE (Original Game)
@@ -394,45 +584,9 @@ function moveHorseFly() {
   }
 }
 
-function drawTitleScreen() {
-  //Title screen background color
-  background("#1d740aff");
-
-  //Make frogs gif appear under text
-  image(frogGif, width / 2 + 150, 330, 150, 150); //right frog gif
-
-  image(illusionflyGif, width / 2 - 300, 10, 900, 900); //illusion fly gif
-
-  image(tongueGif, width / 2 - 300, 330, 150, 150); //tongue gif
-
-  //Center all text shown
-  textAlign(CENTER);
-
-  //Title text
-  fill("#2fff00ff");
-  textSize(100);
-  text("Frog Feaster 3000", width - 320, height / 2 - 140);
-
-  //Rules text
-  fill("#d9ff00ff");
-  textSize(30);
-  text("Use the left mouse click to launch tongue", width / 2, height / 2 - 90);
-  text("Move the frog with your mouse", width / 2, height / 2 - 40);
-
-  //Warning text
-  fill("#ff1b1bff");
-  textSize(45);
-  text("EAT THE FLIES, DODGE THEM HORSEFLIES!", width / 2, height / 2 + 5);
-
-  //Instruction text
-  fill("#2fff00ff");
-  textSize(40);
-  text("Type 'frog' to begin", width / 2, height / 2 + 50);
-
-  //Illustrating what user typed so far
-  textSize(50);
-  text(typedText, width / 2, height / 2 + 90);
-}
+/*******************************
+ * INPUT + FROG / FLY LOGIC
+ *******************************/
 
 function keyPressed() {
   if (keyCode === BACKSPACE) {
@@ -699,13 +853,53 @@ function drawConfetti() {
  * Launch the tongue on click (if it's not launched yet)
  */
 function mousePressed() {
-  if (frog.tongue.state === "idle") {
-    frog.tongue.state = "outbound";
+  // If we are on the title screen, check which button was clicked
+  if (gameState === "title") {
+    // Classic button
+    if (
+      mouseX >= menuButtonX &&
+      mouseX <= menuButtonX + menuButtonWidth &&
+      mouseY >= menuButtonY_Classic &&
+      mouseY <= menuButtonY_Classic + menuButtonHeight
+    ) {
+      gameState = "play"; // Classic Feast uses your existing play state
+      return;
+    }
+
+    // Nightmare button
+    if (
+      mouseX >= menuButtonX &&
+      mouseX <= menuButtonX + menuButtonWidth &&
+      mouseY >= menuButtonY_Nightmare &&
+      mouseY <= menuButtonY_Nightmare + menuButtonHeight
+    ) {
+      gameState = "nightmare"; // you will code this mode later
+      return;
+    }
+
+    // Horsefly button
+    if (
+      mouseX >= menuButtonX &&
+      mouseX <= menuButtonX + menuButtonWidth &&
+      mouseY >= menuButtonY_Horsefly &&
+      mouseY <= menuButtonY_Horsefly + menuButtonHeight
+    ) {
+      gameState = "horsefly"; // you will code this mode later
+      return;
+    }
   }
-  // Start background music only once
-  if (!mySound.isPlaying()) {
-    mySound.loop();
-    mySound.setVolume(0.1);
+
+  // If we are actually playing the classic mode, shoot the tongue
+  if (gameState === "play") {
+    if (frog.tongue.state === "idle") {
+      frog.tongue.state = "outbound";
+    }
+
+    // Start background music only once
+    if (!mySound.isPlaying()) {
+      mySound.loop();
+      mySound.setVolume(0.1);
+    }
   }
 }
 
