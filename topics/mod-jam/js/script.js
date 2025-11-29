@@ -1,20 +1,17 @@
-/**
- * Frogfrogfrog
- * Yelena Arakelian
- *
- * A game of catching flies with your frog-tongue
- *
- * Instructions:
- * - Move the frog with your mouse
- * - Click to launch the tongue
- * - Catch flies
- * - Dodge the horseflies
- *
- * Made with p5
- * https://p5js.org/
- */
+/*******************************
+ * FROG FEASTER 3000 - MAIN GAME
+ * Modes:
+ *   1. Classic Feast (original game)
+ *   2. Nightmare Spotlight Mode
+ *   3. Horsefly Revenge Mode
+ *******************************/
 
 "use strict";
+
+/*******************************
+ * GLOBAL VARIABLES
+ * (Codes that need to be accessed by multiple functions)
+ *******************************/
 
 let frogGif;
 let gameState = "title";
@@ -44,8 +41,12 @@ let videoY = 0;
 // Boolean to track whether the video should be rendered onto the canvas
 let hide = false;
 
-const MAX_STRIKES = 3;
+/*******************************
+ * MODE + MENU SYSTEM
+ * (Handles switching between different game modes and menus)
+ *******************************/
 
+const MAX_STRIKES = 3;
 const friendFrogs = {
   left: {
     body: {
@@ -118,6 +119,10 @@ const fly = {
   speed: 3,
 };
 
+/*******************************
+ * PRELOAD ASSETS
+ *******************************/
+
 function preload() {
   frogGif = loadImage("assets/images/frog.gif");
   Font = loadFont("assets/fonts/TrashHand.TTF");
@@ -140,9 +145,9 @@ function preload() {
   video.elt.addEventListener("ended", () => (hide = true));
 }
 
-/**
- * Creates the canvas and initializes the fly
- */
+/*******************************
+ * SETUP
+ *******************************/
 function setup() {
   createCanvas(640, 480);
   textFont(Font);
@@ -163,6 +168,76 @@ function setup() {
     }
   }, 16000);
 }
+
+/*******************************
+ * DRAW LOOP
+ * (Switches between menu, modes, and gameover screen)
+ *******************************/
+
+function draw() {
+  // Title screen
+  if (gameState === "title") {
+    drawTitleScreen();
+  } else if (gameState === "play") {
+    background("#09f8e4ff");
+    drawBackground();
+    drawFriendFrog();
+    moveFly();
+    drawFly();
+    moveFrog();
+    moveTongue();
+    drawFrog();
+    checkTongueFlyOverlap();
+    checkHorseFlyCollision();
+    moveFriendFrogEye();
+    moveHorseFly();
+    drawhorseFly();
+
+    // Draw confetti if milestone hit
+    drawConfetti();
+    if (showConfetti) {
+      confettiTimer--;
+      if (confettiTimer <= 0) {
+        showConfetti = false;
+      }
+    }
+
+    // Render each images frame by frame of the video based on the value of hide at random positions
+    if (!hide) {
+      image(video, videoX, videoY, 440, 280);
+    }
+
+    /*******************************
+     * GAME OVER SCREEN
+     *******************************/
+  } else if (gameState === "gameover") {
+    background("#360101ff");
+
+    image(pepescreamGif, width / 2 - 300, height / 2 - 30, 150, 150); // on the left
+
+    image(pepebonkGif, width / 2 + 170, height / 2 - 30, 150, 150); // on the right
+
+    fill("#ff0000");
+    textSize(150);
+    text("GAME OVER", width / 2, height / 2 - 90);
+    textSize(50);
+    text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 20);
+    textSize(30);
+    text(
+      "Ctrl+R to restart your frog life, idiot!!",
+      width / 2,
+      height / 2 + 200
+    );
+  }
+}
+
+/*******************************
+ * MENU SCREEN FUNCTIONS
+ *******************************/
+
+/*******************************
+ * CLASSIC MODE (Original Game)
+ *******************************/
 
 function drawBackground() {
   // Sky already being background("#09f8e4ff"); //
@@ -191,6 +266,7 @@ function drawBackground() {
   fill("#0f7bf5ff");
   rect(0, 330, 640, 150);
 }
+
 function drawFriendFrog() {
   //Body of the friends
   fill("#00ff00");
@@ -247,61 +323,6 @@ function drawFriendFrog() {
     friendFrogs.right.eyes.rightPupil.y,
     friendFrogs.right.eyes.rightPupil.size
   );
-}
-
-function draw() {
-  // Title screen
-  if (gameState === "title") {
-    drawTitleScreen();
-  } else if (gameState === "play") {
-    background("#09f8e4ff");
-    drawBackground();
-    drawFriendFrog();
-    moveFly();
-    drawFly();
-    moveFrog();
-    moveTongue();
-    drawFrog();
-    checkTongueFlyOverlap();
-    checkHorseFlyCollision();
-    moveFriendFrogEye();
-    moveHorseFly();
-    drawhorseFly();
-
-    // Draw confetti if milestone hit
-    drawConfetti();
-    if (showConfetti) {
-      confettiTimer--;
-      if (confettiTimer <= 0) {
-        showConfetti = false;
-      }
-    }
-
-    // Render each images frame by frame of the video based on the value of hide at random positions
-    if (!hide) {
-      image(video, videoX, videoY, 440, 280);
-    }
-
-    // Game over screen
-  } else if (gameState === "gameover") {
-    background("#360101ff");
-
-    image(pepescreamGif, width / 2 - 300, height / 2 - 30, 150, 150); // on the left
-
-    image(pepebonkGif, width / 2 + 170, height / 2 - 30, 150, 150); // on the right
-
-    fill("#ff0000");
-    textSize(150);
-    text("GAME OVER", width / 2, height / 2 - 90);
-    textSize(50);
-    text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 20);
-    textSize(30);
-    text(
-      "Ctrl+R to restart your frog life, idiot!!",
-      width / 2,
-      height / 2 + 200
-    );
-  }
 }
 
 function drawhorseFly() {
@@ -687,3 +708,13 @@ function mousePressed() {
     mySound.setVolume(0.1);
   }
 }
+
+/*******************************
+ * NIGHTMARE SPOTLIGHT MODE
+ * (Classic game, darkness & flashlight)
+ *******************************/
+
+/*******************************
+ * HORSEFLY REVENGE MODE
+ * (Horsefly chases the frog)
+ *******************************/
