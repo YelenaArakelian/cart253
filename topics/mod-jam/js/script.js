@@ -950,15 +950,27 @@ function updateNightmareSpotlightMode() {
 
 // Draws the nightmare spotlight mode screen
 function drawNightmareSpotlightMode() {
-  background(0);
-  drawFrog(); // Same as classic
+  // Classic background
+  background("#09f8e4ff");
+  drawBackground();
+  drawFriendFrog();
+  moveFly();
+  drawFly();
+  drawFrog();
 
-  // Draws spotlight circle centered on tongue & mouth
-  noFill();
-  stroke(255, 255, 200);
-  strokeWeight(4);
+  // Dark overlay for night effect
+  push();
+  noStroke();
+  fill(0, 230);
+  rect(0, 0, width, height);
+
+  // Cut hole of light
+  erase();
   ellipse(spotlightX, spotlightY, spotlightRadius * 2);
+  noErase();
+  pop();
 }
+
 /*******************************
  * HORSEFLY REVENGE MODE
  * (Horsefly chases the frog)
