@@ -825,10 +825,17 @@ function checkTongueFlyOverlap() {
   const d = dist(frog.tongue.x, frog.tongue.y, fly.x, fly.y);
   const eaten = d < frog.tongue.size / 2 + fly.size / 2;
 
-  if (eaten) {
+  if (!eaten) {
+    return; // nothing to do if we didn’t hit the fly
+  }
+
+  // pulls tongue back
+  resetFly();
+  frog.tongue.state = "inbound";
+
+  // CLASSIC MODE behaviour
+  if (gameState === "play") {
     fliesEaten++;
-    resetFly();
-    frog.tongue.state = "inbound";
     frog.body.size += 20; // grows frog every fly eaten
 
     // Play eating sound effect when fly is eaten
@@ -852,6 +859,16 @@ function checkTongueFlyOverlap() {
       // Show confetti for a short time
       showConfetti = true;
       confettiTimer = 60; // frames (~1 second if 60fps)
+    }
+  }
+
+  // NIGHTMARE MODE behaviour
+  else if (gameState === "nightmareSpotlight") {
+    nightmareScore++; // just count points
+
+    // Play same eating sound if you want
+    if (!mlemSound.isPlaying()) {
+      mlemSound.play();
     }
   }
 }
@@ -932,10 +949,18 @@ function startNightmareSpotlightMode() {
   nightmareFrog.y = random(50, height - 50);
 }
 
-// Updates the nightmare mode state
 function updateNightmareSpotlightMode() {
+  // Countdown timer
+  nightmareTimerLeft -= 1 / 60; // roughly 1 second per 60 frames
+  if (nightmareTimerLeft < 0) {
+    nightmareTimerLeft = 0; // doesn't go negative
+  }
+
   moveFrog(); // frog follows mouse on X
   moveTongue(); // tongue moves based on its state
+
+  // Check if we hit the fly in nightmare mode
+  checkTongueFlyOverlap();
 
   // If tongue is idle, spotlight sits near frog's face
   if (frog.tongue.state === "idle") {
@@ -969,6 +994,15 @@ function drawNightmareSpotlightMode() {
   ellipse(spotlightX, spotlightY, spotlightRadius * 2);
   noErase();
   pop();
+
+  // Score text on top right
+  fill("#ffffffff");
+  noStroke();
+  textAlign(LEFT, TOP);
+  textSize(20);
+  text("Nightmare score: " + nightmareScore, 10, 10);
+  //Timer text
+  text("Time left: " + nightmareTimerLeft.toFixed(1), 10, 35);
 }
 
 /*******************************
