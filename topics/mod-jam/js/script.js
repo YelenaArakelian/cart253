@@ -901,8 +901,8 @@ function mousePressed() {
     }
   }
 
-  // If we are actually playing the classic mode, shoot the tongue
-  if (gameState === "play") {
+  // Shoot tongue in classic OR nightmare mode
+  if (gameState === "play" || gameState === "nightmareSpotlight") {
     if (frog.tongue.state === "idle") {
       frog.tongue.state = "outbound";
     }
@@ -933,15 +933,31 @@ function startNightmareSpotlightMode() {
 }
 
 // Updates the nightmare mode state
-function updateNightmareSpotlightMode() {}
+function updateNightmareSpotlightMode() {
+  moveFrog(); // frog follows mouse on X
+  moveTongue(); // tongue moves based on its state
+
+  // If tongue is idle, spotlight sits near frog's face
+  if (frog.tongue.state === "idle") {
+    spotlightX = frog.body.x;
+    spotlightY = frog.body.y - 60;
+  } else {
+    // When tongue is out, spotlight follows the tongue tip
+    spotlightX = frog.tongue.x;
+    spotlightY = frog.tongue.y;
+  }
+}
 
 // Draws the nightmare spotlight mode screen
 function drawNightmareSpotlightMode() {
   background(0);
-  fill(255);
-  textAlign(CENTER, CENTER);
-  textSize(24);
-  text("Nightmare Spotlight Mode (Draft)", width / 2, height / 2);
+  drawFrog(); // Same as classic
+
+  // Draws spotlight circle centered on tongue & mouth
+  noFill();
+  stroke(255, 255, 200);
+  strokeWeight(4);
+  ellipse(spotlightX, spotlightY, spotlightRadius * 2);
 }
 /*******************************
  * HORSEFLY REVENGE MODE
