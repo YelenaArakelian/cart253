@@ -63,7 +63,7 @@ let classicDescriptionLine2 = "Eat flies and avoid horseflies";
 let classicDescriptionLine3 = "Move with mouse, click to shoot tongue";
 
 // Nightmare Spotlight
-let nightmareModeName = "Nightmare Spotlight";
+let nightmareModeName = "Nightmare";
 let nightmareDescriptionLine1 = "The whole screen is dark";
 let nightmareDescriptionLine2 = "The flashlight follows your mouse";
 
@@ -380,9 +380,11 @@ function setup() {
  *******************************/
 
 function draw() {
-  // Title screen
+  // TITLE SCREEN
   if (gameState === "title") {
     drawTitleScreen();
+
+    // CLASSIC MODE
   } else if (gameState === "play") {
     background("#09f8e4ff");
     drawBackground();
@@ -407,14 +409,17 @@ function draw() {
       }
     }
 
-    // Render each images frame by frame of the video based on the value of hide at random positions
+    // Render video if not hidden
     if (!hide) {
       image(video, videoX, videoY, 440, 280);
     }
 
-    /*******************************
-     * GAME OVER SCREEN
-     *******************************/
+    // NIGHTMARE SPOTLIGHT MODE
+  } else if (gameState === "nightmareSpotlight") {
+    updateNightmareSpotlightMode();
+    drawNightmareSpotlightMode();
+
+    // GAME OVER SCREEN
   } else if (gameState === "gameover") {
     background("#360101ff");
 
@@ -859,9 +864,6 @@ function drawConfetti() {
   }
 }
 
-/**
- * Launch the tongue on click (if it's not launched yet)
- */
 function mousePressed() {
   // If we are on the title screen, check which button was clicked
   if (gameState === "title") {
@@ -872,7 +874,7 @@ function mousePressed() {
       mouseY >= menuButtonY_Classic &&
       mouseY <= menuButtonY_Classic + menuButtonHeight
     ) {
-      gameState = "play"; // Classic Feast uses your existing play state
+      gameState = "play"; // start classic mode
       return;
     }
 
@@ -883,7 +885,7 @@ function mousePressed() {
       mouseY >= menuButtonY_Nightmare &&
       mouseY <= menuButtonY_Nightmare + menuButtonHeight
     ) {
-      gameState = "nightmare"; // you will code this mode later
+      startNightmareSpotlightMode();
       return;
     }
 
@@ -894,7 +896,7 @@ function mousePressed() {
       mouseY >= menuButtonY_Horsefly &&
       mouseY <= menuButtonY_Horsefly + menuButtonHeight
     ) {
-      gameState = "horsefly"; // you will code this mode later
+      gameState = "horsefly";
       return;
     }
   }
@@ -917,7 +919,30 @@ function mousePressed() {
  * NIGHTMARE SPOTLIGHT MODE
  * (Classic game, darkness & flashlight)
  *******************************/
+function startNightmareSpotlightMode() {
+  gameState = "nightmareSpotlight";
+  nightmareScore = 0;
+  nightmareTimerLeft = 30;
 
+  spotlightX = width / 2;
+  spotlightY = height / 2;
+  spotlightRadius = 100;
+
+  nightmareFrog.x = random(50, width - 50);
+  nightmareFrog.y = random(50, height - 50);
+}
+
+// Updates the nightmare mode state
+function updateNightmareSpotlightMode() {}
+
+// Draws the nightmare spotlight mode screen
+function drawNightmareSpotlightMode() {
+  background(0);
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(24);
+  text("Nightmare Spotlight Mode (Draft)", width / 2, height / 2);
+}
 /*******************************
  * HORSEFLY REVENGE MODE
  * (Horsefly chases the frog)
