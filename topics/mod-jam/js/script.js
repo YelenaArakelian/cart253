@@ -43,6 +43,12 @@ let nightmareFrog = {
   y: 300,
   size: 60,
 };
+// Horsefly bouncing around the title game screen
+let titleFlyX = 300;
+let titleFlyY = 200;
+let titleFlySpeedX = 1.2;
+let titleFlySpeedY = 1.5;
+let titleFlySize = 120;
 
 // Declare a variable to hold the video element
 let video;
@@ -64,8 +70,10 @@ let classicDescriptionLine3 = "Move with mouse, click to shoot tongue";
 
 // Nightmare Spotlight
 let nightmareModeName = "Nightmare";
-let nightmareDescriptionLine1 = "The whole screen is dark";
-let nightmareDescriptionLine2 = "The flashlight follows your mouse";
+let nightmareDescriptionLine1 =
+  "It is nightime..You are the beam of light in the dark";
+let nightmareDescriptionLine2 =
+  "Move with mouse, click to shoot tongue and eat flies";
 let nightmareDescriptionLine3 =
   "Sleeping horseflies.. When they wake up, you’re the snack";
 
@@ -142,6 +150,33 @@ function drawTitleScreen() {
     menuButtonHeight,
     horseflyModeName,
     "horsefly"
+  );
+
+  // Move the fly
+  titleFlyX += titleFlySpeedX;
+  titleFlyY += titleFlySpeedY;
+
+  // Bounce left/right
+  if (titleFlyX < titleFlySize / 2 || titleFlyX > width - titleFlySize / 2) {
+    titleFlySpeedX *= -1;
+  }
+
+  // Bounce top/bottom
+  if (titleFlyY < titleFlySize / 2 || titleFlyY > height - titleFlySize / 2) {
+    titleFlySpeedY *= -1;
+  }
+
+  // Small shake so it looks angry
+  let shakeX = random(-3, 3);
+  let shakeY = random(-3, 3);
+
+  // Draw it
+  image(
+    horseFlyIMG,
+    titleFlyX - titleFlySize / 2 + shakeX,
+    titleFlyY - titleFlySize / 2 + shakeY,
+    titleFlySize,
+    titleFlySize
   );
 
   // Small instruction box beside hovered button
@@ -1002,7 +1037,7 @@ function drawNightmareSpotlightMode() {
   // Dark overlay
   push();
   noStroke();
-  fill(0, 0, 0, 250);
+  fill(0, 0, 0, 230);
   rect(0, 0, width, height);
   pop();
 
