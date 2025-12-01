@@ -14,6 +14,7 @@
  *******************************/
 
 let frogGif;
+let scaryGif;
 let gameState = "title";
 let typedText = ""; // track what player types
 let Font;
@@ -50,7 +51,6 @@ let videoY = 0;
 
 // Boolean to track whether the video should be rendered onto the canvas
 let hide = false;
-
 /*******************************
  * TITLE MENU SCREEN
  * (Handles the title screen and its interactions)
@@ -66,6 +66,8 @@ let classicDescriptionLine3 = "Move with mouse, click to shoot tongue";
 let nightmareModeName = "Nightmare";
 let nightmareDescriptionLine1 = "The whole screen is dark";
 let nightmareDescriptionLine2 = "The flashlight follows your mouse";
+let nightmareDescriptionLine3 =
+  "Sleeping horseflies.. When they wake up, you’re the snack";
 
 // Horsefly Revenge
 let horseflyModeName = "Horsefly Revenge";
@@ -177,7 +179,7 @@ function drawMenuButton(x, y, w, h, label, modeName) {
 
 // Little instruction box next to hovered button
 function drawInstructionPopup() {
-  // If mouse is not on any button, don't draw anything
+  // If mouse is not on any button, doesn't draw anything
   if (menuHoverMode === "") {
     return;
   }
@@ -236,6 +238,8 @@ function drawInstructionPopup() {
     text(nightmareDescriptionLine1, textX, textY);
     textY += 12;
     text(nightmareDescriptionLine2, textX, textY);
+    textY += 12;
+    text(nightmareDescriptionLine3, textX, textY);
   } else if (menuHoverMode === "horsefly") {
     text(horseflyDescriptionLine1, textX, textY);
     textY += 12;
@@ -341,6 +345,7 @@ function preload() {
   confettiGif = loadImage("assets/images/confetti.gif"); // shown when milestone hit
   mlemSound = loadSound("assets/sounds/mlem.mp3"); // eating sound effect when fly is eaten
   hurtSound = loadSound("assets/sounds/hurt.mp3"); // hurt sound effect when horsefly is eaten
+  scaryGif = loadImage("assets/images/scary.gif");
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -419,7 +424,11 @@ function draw() {
     updateNightmareSpotlightMode();
     drawNightmareSpotlightMode();
 
-    // GAME OVER SCREEN
+    // NIGHTMARE RESULT SCREEN
+  } else if (gameState === "nightmareOver") {
+    drawNightmareOverScreen();
+
+    // GAME OVER SCREEN (CLASSIC MODE)
   } else if (gameState === "gameover") {
     background("#360101ff");
 
@@ -906,7 +915,7 @@ function mousePressed() {
       return;
     }
 
-    // Horsefly button
+    // Horsefly button (placeholder for later)
     if (
       mouseX >= menuButtonX &&
       mouseX <= menuButtonX + menuButtonWidth &&
@@ -916,6 +925,12 @@ function mousePressed() {
       gameState = "horsefly";
       return;
     }
+  }
+
+  // If nightmare is over, click goes back to title screen
+  if (gameState === "nightmareOver") {
+    gameState = "title";
+    return;
   }
 
   // Shoot tongue in classic OR nightmare mode
@@ -934,12 +949,12 @@ function mousePressed() {
 
 /*******************************
  * NIGHTMARE SPOTLIGHT MODE
- * (Classic game, darkness & flashlight)
+ * (Classic game but with darkness & flashlight)
  *******************************/
 function startNightmareSpotlightMode() {
   gameState = "nightmareSpotlight";
   nightmareScore = 0;
-  nightmareTimerLeft = 30;
+  nightmareTimerLeft = 30; // 30 seconds for the mode
 
   spotlightX = width / 2;
   spotlightY = height / 2;
@@ -950,24 +965,25 @@ function startNightmareSpotlightMode() {
 }
 
 function updateNightmareSpotlightMode() {
-  // Countdown timer
-  nightmareTimerLeft -= 1 / 60; // roughly 1 second per 60 frames
-  if (nightmareTimerLeft < 0) {
-    nightmareTimerLeft = 0; // doesn't go negative
-  }
-
-  moveFrog(); // frog follows mouse on X
-  moveTongue(); // tongue moves based on its state
-
-  // Check if we hit the fly in nightmare mode
+  moveFrog();
+  moveTongue();
   checkTongueFlyOverlap();
 
-  // If tongue is idle, spotlight sits near frog's face
+  // countdown timer
+  nightmareTimerLeft -= deltaTime / 1000; // convert ms to seconds
+  if (nightmareTimerLeft <= 0) {
+    nightmareTimerLeft = 0;
+    gameState = "nightmareOver";
+    return;
+  }
+
+  // where the light is situated:
+  // when tongue is idle, around frog face
+  // when tongue is out, around the tongue tip
   if (frog.tongue.state === "idle") {
     spotlightX = frog.body.x;
     spotlightY = frog.body.y - 60;
   } else {
-    // When tongue is out, spotlight follows the tongue tip
     spotlightX = frog.tongue.x;
     spotlightY = frog.tongue.y;
   }
@@ -975,34 +991,113 @@ function updateNightmareSpotlightMode() {
 
 // Draws the nightmare spotlight mode screen
 function drawNightmareSpotlightMode() {
-  // Classic background
   background("#09f8e4ff");
   drawBackground();
   drawFriendFrog();
+  moveFriendFrogEye();
   moveFly();
-  drawFly();
-  drawFrog();
+  drawFly(); // base dark fly
+  drawFrog(); // base frog
 
-  // Dark overlay for night effect
+  // Dark overlay
   push();
   noStroke();
-  fill(0, 230);
+  fill(0, 0, 0, 250);
   rect(0, 0, width, height);
-
-  // Cut hole of light
-  erase();
-  ellipse(spotlightX, spotlightY, spotlightRadius * 2);
-  noErase();
   pop();
 
-  // Score text on top right
-  fill("#ffffffff");
+  // Light beam + halo around tongue
+  let beamCoreWidth = frog.tongue.size + 15; // main bright part
+  let beamOuterWidth = frog.tongue.size + 35; // soft glow part
+
+  // Find where the beam starts (at the top) and ends (at the bottom)
+  let topY;
+  if (spotlightY < frog.body.y) {
+    topY = spotlightY;
+  } else {
+    topY = frog.body.y;
+  }
+
+  let bottomY = frog.body.y + frog.body.size / 2;
+
+  push();
+  noStroke();
+
+  // outer soft beam
+  fill(255, 255, 220, 35);
+  rect(spotlightX - beamOuterWidth / 2, topY, beamOuterWidth, bottomY - topY);
+
+  // inner brighter beam
+  fill(255, 255, 220, 70);
+  rect(
+    spotlightX - beamCoreWidth / 2,
+    topY,
+    beamCoreWidth,
+    bottomY - topY,
+    beamCoreWidth / 2
+  );
+
+  // big outer halo
+  fill(255, 255, 220, 40);
+  ellipse(spotlightX, spotlightY, spotlightRadius * 2.2);
+
+  // inner bright halo
+  fill(255, 255, 220, 90);
+  ellipse(spotlightX, spotlightY, spotlightRadius * 1.3);
+
+  pop();
+
+  // Make the fly brighter if it is inside the flashlight
+  const inCircle =
+    dist(fly.x, fly.y, spotlightX, spotlightY) < spotlightRadius * 1.2;
+
+  const inBeam =
+    fly.x >= spotlightX - beamOuterWidth / 2 &&
+    fly.x <= spotlightX + beamOuterWidth / 2 &&
+    fly.y >= topY &&
+    fly.y <= bottomY;
+
+  // fly touching light? if yes, there's a glow around it
+  if (inCircle || inBeam) {
+    push();
+    noStroke();
+    // little glow around the fly
+    fill(255, 255, 180, 120);
+    ellipse(fly.x, fly.y, fly.size * 3);
+
+    // bright fly body glow
+    fill("#ffffee");
+    ellipse(fly.x, fly.y, fly.size * 1.6);
+    pop();
+  }
+  // nicely lit fly
+  drawFrog();
+
+  // text
+  fill(255);
   noStroke();
   textAlign(LEFT, TOP);
   textSize(20);
-  text("Nightmare score: " + nightmareScore, 10, 10);
-  //Timer text
-  text("Time left: " + nightmareTimerLeft.toFixed(1), 10, 35);
+  text("Nightmare Score: " + nightmareScore, 10, 10);
+  text("Time Left: " + nightmareTimerLeft.toFixed(1) + "s", 10, 35);
+}
+
+function drawNightmareOverScreen() {
+  background(0); // black screen
+
+  image(scaryGif, width / 2 - 150, height / 2 - 220, 300, 200);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+
+  textSize(40);
+  text("Nightmare Over!", width / 2, height / 2 - 40);
+
+  textSize(26);
+  text("Final score: " + nightmareScore, width / 2, height / 2 + 5);
+
+  textSize(18);
+  text("Click anywhere to return to the title", width / 2, height / 2 + 50);
 }
 
 /*******************************
