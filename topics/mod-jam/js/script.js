@@ -1156,7 +1156,7 @@ function drawNightmareOverScreen() {
 let horseflyPlayer = {
   x: 0,
   y: 0,
-  size: 60,
+  size: 80,
 };
 
 // Frog used in this mode
@@ -1186,13 +1186,80 @@ function startHorseflyFeastMode() {
   horseflyPlayer.x = width / 2;
   horseflyPlayer.y = height / 4;
 
-  // Frog starts at the bottom
   horseflyFrog.x = width / 2;
   horseflyFrog.groundY = height - 70;
   horseflyFrog.y = horseflyFrog.groundY;
   horseflyFrog.cooldown = 60;
 
-  // This resets score + flies
   horseflyScore = 0;
   horseflyFlies = [];
+
+  noCursor(); // hides the mouse pointer so the horsefly becomes the mouse
+}
+
+// Make a single fly at a random spot
+function spawnHorseflyFly() {
+  let flyObj = {
+    x: random(40, width - 40),
+    y: random(40, height - 160),
+    size: 18,
+  };
+  horseflyFlies.push(flyObj);
+}
+
+function updateHorseflyFeastMode() {
+  // Horsefly follows mouse
+  horseflyPlayer.x = mouseX;
+  horseflyPlayer.y = mouseY;
+
+  // Constrain limit inside canvas
+  horseflyPlayer.x = constrain(
+    horseflyPlayer.x,
+    horseflyPlayer.size / 2,
+    width - horseflyPlayer.size / 2
+  );
+  horseflyPlayer.y = constrain(
+    horseflyPlayer.y,
+    horseflyPlayer.size / 2,
+    height - horseflyPlayer.size / 2
+  );
+}
+
+// Draw Horsefly mode
+function drawHorseflyFeastMode() {
+  background("#09f8e4ff");
+  drawBackground(); // reusing the classic background
+
+  // Draw flies
+  for (let i = 0; i < horseflyFlies.length; i++) {
+    let f = horseflyFlies[i];
+    fill(0);
+    ellipse(f.x, f.y, f.size);
+  }
+
+  // Draw horsefly image
+  imageMode(CENTER);
+  image(
+    horseFlyIMG,
+    horseflyPlayer.x,
+    horseflyPlayer.y,
+    horseflyPlayer.size,
+    horseflyPlayer.size
+  );
+
+  // Score text
+  fill(0);
+  textAlign(LEFT, TOP);
+  textSize(20);
+  text("Flies eaten: " + horseflyScore, 10, 10);
+}
+
+// GAME  OVER screen
+function drawHorseflyFeastOverScreen() {
+  cursor();
+  background(0);
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(30);
+  text("Horsefly Mode Over", width / 2, height / 2);
 }
