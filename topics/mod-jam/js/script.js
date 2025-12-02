@@ -43,6 +43,7 @@ let nightmareFrog = {
   y: 300,
   size: 60,
 };
+let horseflyRage = 0; // how much the frog shakes in horsefly revenge
 // Horsefly bouncing around the title game screen
 let titleFlyX = 300;
 let titleFlyY = 200;
@@ -465,10 +466,6 @@ function draw() {
     drawNightmareOverScreen();
 
     // GAME OVER SCREEN (CLASSIC MODE)
-  } else if (gameState === "nightmareOver") {
-    drawNightmareOverScreen();
-
-    // GAME OVER SCREEN (CLASSIC MODE)
   } else if (gameState === "gameover") {
     background("#360101ff");
 
@@ -494,7 +491,6 @@ function draw() {
     drawHorseflyFeastOverScreen();
   }
 }
-
 /*******************************
  * CLASSIC MODE (Original Game)
  *******************************/
@@ -1154,16 +1150,49 @@ function drawNightmareOverScreen() {
 
 /*******************************
  * HORSEFLY REVENGE MODE
- * (Horsefly chases the frog)
  *******************************/
+
+// Horsefly player that follows the mouse
+let horseflyPlayer = {
+  x: 0,
+  y: 0,
+  size: 60,
+};
+
+// Frog used in this mode
+let horseflyFrog = {
+  x: 0,
+  y: 0,
+  size: 140,
+  groundY: 0,
+  jumping: false,
+  goingUp: true,
+  jumpHeight: 120,
+  jumpSpeed: 6,
+  cooldown: 0,
+  xSpeed: 2.5,
+};
+
+// Flies the horsefly eats
+let horseflyFlies = [];
+let horseflyFlyCount = 5;
+
+// Score for Horsefly mode
+let horseflyScore = 0;
+
+// Start the mode
 function startHorseflyFeastMode() {
   gameState = "horsefly";
+  horseflyPlayer.x = width / 2;
+  horseflyPlayer.y = height / 4;
+
+  // Frog starts at the bottom
+  horseflyFrog.x = width / 2;
+  horseflyFrog.groundY = height - 70;
+  horseflyFrog.y = horseflyFrog.groundY;
+  horseflyFrog.cooldown = 60;
+
+  // This resets score + flies
+  horseflyScore = 0;
+  horseflyFlies = [];
 }
-
-function updateHorseflyFeastMode() {}
-
-function drawHorseflyFeastMode() {
-  background("#1b0033");
-}
-
-function drawHorseflyFeastOverScreen() {}
