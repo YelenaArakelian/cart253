@@ -57,6 +57,7 @@ let videoY = 0;
 
 // Boolean to track whether the video should be rendered onto the canvas
 let hide = false;
+
 /*******************************
  * TITLE MENU SCREEN
  * (Handles the title screen and its interactions)
@@ -464,6 +465,10 @@ function draw() {
     drawNightmareOverScreen();
 
     // GAME OVER SCREEN (CLASSIC MODE)
+  } else if (gameState === "nightmareOver") {
+    drawNightmareOverScreen();
+
+    // GAME OVER SCREEN (CLASSIC MODE)
   } else if (gameState === "gameover") {
     background("#360101ff");
 
@@ -481,6 +486,12 @@ function draw() {
       width / 2,
       height / 2 + 200
     );
+  } else if (gameState === "horsefly") {
+    // Horsefly Feast Mode
+    updateHorseflyFeastMode();
+    drawHorseflyFeastMode();
+  } else if (gameState === "horseflyOver") {
+    drawHorseflyFeastOverScreen();
   }
 }
 
@@ -828,7 +839,7 @@ function moveTongue() {
 }
 
 /**
- * Displays the tongue (tip and line connection) and the frog (body)
+ * Displays the tongue and the frog
  */
 function drawFrog() {
   // Draw the tongue tip
@@ -910,7 +921,7 @@ function checkTongueFlyOverlap() {
   else if (gameState === "nightmareSpotlight") {
     nightmareScore++; // just count points
 
-    // Play same eating sound if you want
+    // Same eating sound if you want
     if (!mlemSound.isPlaying()) {
       mlemSound.play();
     }
@@ -926,7 +937,7 @@ function drawConfetti() {
 }
 
 function mousePressed() {
-  // If we are on the title screen, check which button was clicked
+  // 1) TITLE SCREEN BUTTONS
   if (gameState === "title") {
     // Classic button
     if (
@@ -950,25 +961,31 @@ function mousePressed() {
       return;
     }
 
-    // Horsefly button (placeholder for later)
+    // Horsefly button
     if (
       mouseX >= menuButtonX &&
       mouseX <= menuButtonX + menuButtonWidth &&
       mouseY >= menuButtonY_Horsefly &&
       mouseY <= menuButtonY_Horsefly + menuButtonHeight
     ) {
-      gameState = "horsefly";
+      startHorseflyFeastMode();
       return;
     }
   }
 
-  // If nightmare is over, click goes back to title screen
+  // NIGHTMARE OVER, click to go back to title
   if (gameState === "nightmareOver") {
     gameState = "title";
     return;
   }
 
-  // Shoot tongue in classic OR nightmare mode
+  // HORSEFLY FEAST OVER, click to go back to title
+  if (gameState === "horseflyOver") {
+    gameState = "title";
+    return;
+  }
+
+  // SHOOT TONGUE (classic + nightmare spotlight)
   if (gameState === "play" || gameState === "nightmareSpotlight") {
     if (frog.tongue.state === "idle") {
       frog.tongue.state = "outbound";
@@ -1139,3 +1156,14 @@ function drawNightmareOverScreen() {
  * HORSEFLY REVENGE MODE
  * (Horsefly chases the frog)
  *******************************/
+function startHorseflyFeastMode() {
+  gameState = "horsefly";
+}
+
+function updateHorseflyFeastMode() {}
+
+function drawHorseflyFeastMode() {
+  background("#1b0033");
+}
+
+function drawHorseflyFeastOverScreen() {}
