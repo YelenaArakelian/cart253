@@ -43,7 +43,7 @@ let nightmareFrog = {
   y: 300,
   size: 60,
 };
-let horseflyRage = 0; // how much the frog shakes in horsefly revenge
+let horseflyRage = 0; // how much the frog shakes in horsefly feast
 // Horsefly bouncing around the title game screen
 let titleFlyX = 300;
 let titleFlyY = 200;
@@ -79,11 +79,11 @@ let nightmareDescriptionLine2 =
 let nightmareDescriptionLine3 =
   "Sleeping horseflies.. When they wake up, you’re the snack";
 
-// Horsefly Revenge
-let horseflyModeName = "Horsefly Revenge";
+// Horsefly Feast
+let horseflyModeName = "Horsefly Feast";
 let horseflyDescriptionLine1 = "You play as the horsefly";
 let horseflyDescriptionLine2 = "Avoid the frog’s giant tongue!";
-let horseflyDescriptionLine3 = "Move with mouse";
+let horseflyDescriptionLine3 = "Move with mouse to eat the flies";
 
 // Buttons on the left side of the title screen
 let menuButtonX = 60;
@@ -1149,7 +1149,7 @@ function drawNightmareOverScreen() {
 }
 
 /*******************************
- * HORSEFLY REVENGE MODE
+ * HORSEFLY FEAST MODE
  *******************************/
 
 // Horsefly player that follows the mouse
