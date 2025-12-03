@@ -1263,10 +1263,9 @@ function drawHorseflyFeastMode() {
   drawBackground(); // reusing the classic background
 
   // Draw flies
-  for (let i = 0; i < horseflyFlies.length; i++) {
-    let f = horseflyFlies[i];
+  for (let oneFly of horseflyFlies) {
     fill(0);
-    ellipse(f.x, f.y, f.size);
+    ellipse(oneFly.x, oneFly.y, oneFly.size);
   }
 
   // Draw horsefly image
