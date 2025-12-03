@@ -1153,6 +1153,13 @@ let horseflyPlayer = {
   size: 80,
 };
 
+// Flies for the horsfly to eat
+let horseflyFlies = [];
+let horseflyFlyCount = 5;
+
+// Score for Horsefly Feast mode
+let horseflyScore = 0;
+
 // This starts up the game once button is glocked
 function startHorseflyFeastMode() {
   gameState = "horsefly";
@@ -1161,7 +1168,18 @@ function startHorseflyFeastMode() {
   horseflyPlayer.x = width / 2;
   horseflyPlayer.y = height / 2;
 
-  noCursor(); // Hide the system cursor so the horsefly becomes the cursor
+  // Reset score and rage for this mode
+  horseflyScore = 0;
+  horseflyRage = 0;
+
+  // Resets the amount of flies on the amount noted and spawn some more flies
+  horseflyFlies = [];
+  while (horseflyFlies.length < horseflyFlyCount) {
+    spawnHorseflyFly();
+  }
+
+  // Hide the system cursor so the horsefly becomes the cursor
+  noCursor();
 }
 
 // Updated logic for Horsefly Feast Game Mode
@@ -1181,15 +1199,57 @@ function updateHorseflyFeastMode() {
     horseflyPlayer.size / 2,
     height - horseflyPlayer.size / 2
   );
+
+  // This checks if the horsefly is eating any flies
+  checkHorseflyEatFlies();
+}
+
+// Create a single fly at a random position
+function spawnHorseflyFly() {
+  let flyObj = {
+    x: random(40, width - 40),
+    y: random(40, height - 160), // keep them above the very bottom
+    size: 18,
+  };
+  horseflyFlies.push(flyObj);
+}
+
+// Check if the horsefly overlaps any flies
+function checkHorseflyEatFlies() {
+  for (let oneFly of horseflyFlies) {
+    let distance = dist(horseflyPlayer.x, horseflyPlayer.y, oneFly.x, oneFly.y);
+
+    if (distance < horseflyPlayer.size / 2 + oneFly.size / 2) {
+      // Ate this fly
+      horseflyScore = horseflyScore + 1;
+      horseflyRage = horseflyRage + 1;
+
+      // Rage visual effects
+      if (horseflyRage > 10) {
+        horseflyRage = 10;
+      }
+
+      // The flies spawn at random places
+      oneFly.x = random(40, width - 40);
+      oneFly.y = random(40, height - 160);
+    }
+  }
 }
 
 // Draw Horsefly Feast mode
 function drawHorseflyFeastMode() {
-  // Reuse the classic background
+  // Reuse the classic background as the other variations
   background("#09f8e4ff");
   drawBackground();
 
-  // Draw the horsefly image at the player's position
+  // Draw flies
+  noStroke();
+  fill(0);
+  for (let oneFly of horseflyFlies) {
+    ellipse(oneFly.x, oneFly.y, oneFly.size);
+  }
+
+  // Draws the horsefly image
   imageMode(CENTER);
   image(
     horseFlyIMG,
@@ -1198,6 +1258,12 @@ function drawHorseflyFeastMode() {
     horseflyPlayer.size,
     horseflyPlayer.size
   );
+
+  // score & basic instructions
+  fill(0);
+  textAlign(LEFT, TOP);
+  textSize(18);
+  text("Flies eaten: " + horseflyScore, 10, 10);
 }
 
 // Game over screen for Horsefly feast game mode
