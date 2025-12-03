@@ -1146,3 +1146,66 @@ function drawNightmareOverScreen() {
 /*******************************
  * HORSEFLY FEAST MODE
  *******************************/
+// Horsefly player that follows the mouse
+let horseflyPlayer = {
+  x: 0,
+  y: 0,
+  size: 80,
+};
+
+// This starts up the game once button is glocked
+function startHorseflyFeastMode() {
+  gameState = "horsefly";
+
+  // Start horsefly in the middle
+  horseflyPlayer.x = width / 2;
+  horseflyPlayer.y = height / 2;
+
+  noCursor(); // Hide the system cursor so the horsefly becomes the cursor
+}
+
+// Updated logic for Horsefly Feast Game Mode
+function updateHorseflyFeastMode() {
+  // Horsefly follows the mouse
+  horseflyPlayer.x = mouseX;
+  horseflyPlayer.y = mouseY;
+
+  // Keep horsefly inside the canvas
+  horseflyPlayer.x = constrain(
+    horseflyPlayer.x,
+    horseflyPlayer.size / 2,
+    width - horseflyPlayer.size / 2
+  );
+  horseflyPlayer.y = constrain(
+    horseflyPlayer.y,
+    horseflyPlayer.size / 2,
+    height - horseflyPlayer.size / 2
+  );
+}
+
+// Draw Horsefly Feast mode
+function drawHorseflyFeastMode() {
+  // Reuse the classic background
+  background("#09f8e4ff");
+  drawBackground();
+
+  // Draw the horsefly image at the player's position
+  imageMode(CENTER);
+  image(
+    horseFlyIMG,
+    horseflyPlayer.x,
+    horseflyPlayer.y,
+    horseflyPlayer.size,
+    horseflyPlayer.size
+  );
+}
+
+// Game over screen for Horsefly feast game mode
+function drawHorseflyFeastOverScreen() {
+  cursor();
+  background(0);
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(30);
+  text("Horsefly Mode Over", width / 2, height / 2);
+}
