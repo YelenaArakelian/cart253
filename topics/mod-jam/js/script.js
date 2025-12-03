@@ -38,11 +38,6 @@ let nightmareTimerLeft = 30; // seconds
 let spotlightX = 0;
 let spotlightY = 0;
 let spotlightRadius = 100; // radius of spotlight
-let nightmareFrog = {
-  x: 300,
-  y: 300,
-  size: 60,
-};
 let horseflyRage = 0; // how much the frog shakes in horsefly feast
 // Horsefly bouncing around the title game screen
 let titleFlyX = 300;
@@ -999,70 +994,155 @@ function mousePressed() {
  * NIGHTMARE SPOTLIGHT MODE
  * (Classic game but with darkness & flashlight)
  *******************************/
-// Draw Horsefly mode
-function drawHorseflyFeastMode() {
-  background("#09f8e4ff");
-  drawBackground(); // reusing the classic background
+function startNightmareSpotlightMode() {
+  gameState = "nightmareSpotlight";
+  nightmareScore = 0;
+  nightmareTimerLeft = 30; // 30 seconds for the mode
 
-  // Draw flies
-  for (let oneFly of horseflyFlies) {
-    fill(0);
-    ellipse(oneFly.x, oneFly.y, oneFly.size);
+  spotlightX = width / 2;
+  spotlightY = height / 2;
+  spotlightRadius = 100;
+
+  nightmareFrog.x = random(50, width - 50);
+  nightmareFrog.y = random(50, height - 50);
+}
+
+function updateNightmareSpotlightMode() {
+  moveFrog();
+  moveTongue();
+  checkTongueFlyOverlap();
+
+  // countdown timer
+  nightmareTimerLeft -= deltaTime / 1000; // convert ms to seconds
+  if (nightmareTimerLeft <= 0) {
+    nightmareTimerLeft = 0;
+    gameState = "nightmareOver";
+    return;
   }
 
-  // Draw frog on the ground
-  drawHorseflyFrog();
+  // where the light is situated:
+  // when tongue is idle, around frog face
+  // when tongue is out, around the tongue tip
+  if (frog.tongue.state === "idle") {
+    spotlightX = frog.body.x;
+    spotlightY = frog.body.y - 60;
+  } else {
+    spotlightX = frog.tongue.x;
+    spotlightY = frog.tongue.y;
+  }
+}
 
-  // Draw horsefly image
-  imageMode(CENTER);
-  image(
-    horseFlyIMG,
-    horseflyPlayer.x,
-    horseflyPlayer.y,
-    horseflyPlayer.size,
-    horseflyPlayer.size
+// Draws the nightmare spotlight mode screen
+function drawNightmareSpotlightMode() {
+  background("#09f8e4ff");
+  drawBackground();
+  drawFriendFrog();
+  moveFriendFrogEye();
+  moveFly();
+  drawFly(); // base dark fly
+  drawFrog(); // base frog
+
+  // Dark overlay
+  push();
+  noStroke();
+  fill(0, 0, 0, 230);
+  rect(0, 0, width, height);
+  pop();
+
+  // Light beam + halo around tongue
+  let beamCoreWidth = frog.tongue.size + 15; // main bright part
+  let beamOuterWidth = frog.tongue.size + 35; // soft glow part
+
+  // Find where the beam starts (at the top) and ends (at the bottom)
+  let topY;
+  if (spotlightY < frog.body.y) {
+    topY = spotlightY;
+  } else {
+    topY = frog.body.y;
+  }
+
+  let bottomY = frog.body.y + frog.body.size / 2;
+
+  push();
+  noStroke();
+
+  // outer soft beam
+  fill(255, 255, 220, 35);
+  rect(spotlightX - beamOuterWidth / 2, topY, beamOuterWidth, bottomY - topY);
+
+  // inner brighter beam
+  fill(255, 255, 220, 70);
+  rect(
+    spotlightX - beamCoreWidth / 2,
+    topY,
+    beamCoreWidth,
+    bottomY - topY,
+    beamCoreWidth / 2
   );
 
-  // Score text
-  fill(0);
-  textAlign(LEFT, TOP);
-  textSize(20);
-  text("Flies eaten: " + horseflyScore, 10, 10);
-}
+  // big outer halo
+  fill(255, 255, 220, 40);
+  ellipse(spotlightX, spotlightY, spotlightRadius * 2.2);
 
-function drawHorseflyFrog() {
-  push();
-  imageMode(CENTER);
-
-  // Frog body
-  noStroke();
-  fill("#00ff00"); // green frog
-  ellipse(horseflyFrog.x, horseflyFrog.y, horseflyFrog.size);
-
-  // Eyes
-  fill("#ffffff");
-  let eyeOffsetX = horseflyFrog.size * 0.25;
-  let eyeOffsetY = horseflyFrog.size * 0.25;
-  let eyeSize = horseflyFrog.size * 0.25;
-
-  ellipse(horseflyFrog.x - eyeOffsetX, horseflyFrog.y - eyeOffsetY, eyeSize);
-  ellipse(horseflyFrog.x + eyeOffsetX, horseflyFrog.y - eyeOffsetY, eyeSize);
-
-  // Pupils
-  fill("#000000");
-  let pupilSize = eyeSize * 0.5;
-  ellipse(horseflyFrog.x - eyeOffsetX, horseflyFrog.y - eyeOffsetY, pupilSize);
-  ellipse(horseflyFrog.x + eyeOffsetX, horseflyFrog.y - eyeOffsetY, pupilSize);
+  // inner bright halo
+  fill(255, 255, 220, 90);
+  ellipse(spotlightX, spotlightY, spotlightRadius * 1.3);
 
   pop();
+
+  // Make the fly brighter if it is inside the flashlight
+  const inCircle =
+    dist(fly.x, fly.y, spotlightX, spotlightY) < spotlightRadius * 1.2;
+
+  const inBeam =
+    fly.x >= spotlightX - beamOuterWidth / 2 &&
+    fly.x <= spotlightX + beamOuterWidth / 2 &&
+    fly.y >= topY &&
+    fly.y <= bottomY;
+
+  // fly touching light? if yes, there's a glow around it
+  if (inCircle || inBeam) {
+    push();
+    noStroke();
+    // little glow around the fly
+    fill(255, 255, 180, 120);
+    ellipse(fly.x, fly.y, fly.size * 3);
+
+    // bright fly body glow
+    fill("#ffffee");
+    ellipse(fly.x, fly.y, fly.size * 1.6);
+    pop();
+  }
+  // nicely lit fly
+  drawFrog();
+
+  // text
+  fill(255);
+  noStroke();
+  textAlign(LEFT, TOP);
+  textSize(20);
+  text("Nightmare Score: " + nightmareScore, 10, 10);
+  text("Time Left: " + nightmareTimerLeft.toFixed(1) + "s", 10, 35);
 }
 
-// GAME  OVER screen
-function drawHorseflyFeastOverScreen() {
-  cursor();
-  background(0);
+function drawNightmareOverScreen() {
+  background(0); // black screen
+
+  image(scaryGif, width / 2 - 150, height / 2 - 220, 300, 200);
+
   fill(255);
   textAlign(CENTER, CENTER);
-  textSize(30);
-  text("Horsefly Mode Over", width / 2, height / 2);
+
+  textSize(40);
+  text("Nightmare Over!", width / 2, height / 2 - 40);
+
+  textSize(26);
+  text("Final score: " + nightmareScore, width / 2, height / 2 + 5);
+
+  textSize(18);
+  text("Click anywhere to return to the title", width / 2, height / 2 + 50);
 }
+
+/*******************************
+ * HORSEFLY FEAST MODE
+ *******************************/
