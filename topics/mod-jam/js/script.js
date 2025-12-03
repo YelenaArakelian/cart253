@@ -83,7 +83,7 @@ let nightmareDescriptionLine3 =
 // Horsefly Feast
 let horseflyModeName = "Horsefly Feast";
 let horseflyDescriptionLine1 = "You play as the horsefly";
-let horseflyDescriptionLine2 = "Avoid the frog’s giant tongue!";
+let horseflyDescriptionLine2 = "Avoid the frog jumping at you!";
 let horseflyDescriptionLine3 = "Move with mouse to eat the flies";
 
 // Buttons on the left side of the title screen
@@ -470,17 +470,21 @@ function draw() {
   } else if (gameState === "gameover") {
     background("#360101ff");
 
-    image(pepescreamGif, width / 2 - 300, height / 2 - 30, 150, 150); // on the left
-    image(pepebonkGif, width / 2 + 170, height / 2 - 30, 150, 150); // on the right
+    image(pepescreamGif, width / 2 - 300, height / 2 - 30, 150, 150);
+    image(pepebonkGif, width / 2 + 170, height / 2 - 30, 150, 150);
+
+    textAlign(CENTER, CENTER);
 
     fill("#ff0000");
     textSize(150);
     text("GAME OVER", width / 2, height / 2 - 90);
+
     textSize(50);
     text(`You got ${frogStrikes} strikes`, width / 2, height / 2 + 20);
+
     textSize(30);
     text(
-      "Ctrl+R to restart your frog life, idiot!!",
+      "Refresh to restart your frog life, idiot!!",
       width / 2,
       height / 2 + 200
     );
@@ -492,6 +496,7 @@ function draw() {
     drawHorseflyFeastOverScreen();
   }
 }
+
 /*******************************
  * CLASSIC MODE (Original Game)
  *******************************/
@@ -934,7 +939,6 @@ function drawConfetti() {
 }
 
 function mousePressed() {
-  // 1) TITLE SCREEN BUTTONS
   if (gameState === "title") {
     // Classic button
     if (
@@ -1231,6 +1235,7 @@ function updateHorseflyFeastMode() {
 
   updateHorseflyFrog();
   checkHorseflyEatFlies();
+  checkHorseflyCaught();
 }
 
 function updateHorseflyFrog() {
@@ -1354,6 +1359,11 @@ function checkHorseflyEatFlies() {
       horseflyScore = horseflyScore + 1;
       horseflyRage = horseflyRage + 1;
 
+      // Play eating sound
+      if (!mlemSound.isPlaying()) {
+        mlemSound.play();
+      }
+
       // Rage visual effects
       if (horseflyRage > 10) {
         horseflyRage = 10;
@@ -1363,6 +1373,25 @@ function checkHorseflyEatFlies() {
       oneFly.x = random(40, width - 40);
       oneFly.y = random(40, height - 160);
     }
+  }
+}
+
+// Check if the big frog catches the horsefly
+function checkHorseflyCaught() {
+  // This is the distance between horsefly player and frog
+  let distance = dist(
+    horseflyPlayer.x,
+    horseflyPlayer.y,
+    horseflyFrog.x,
+    horseflyFrog.y
+  );
+
+  // How close they need to be to count as a hit
+  let catchDistance = horseflyPlayer.size / 2 + (horseflyFrog.size / 2) * 0.7; // shrink frog hitbox a bit
+
+  if (distance < catchDistance) {
+    // If frog caught horsefly, game OVER
+    gameState = "horseflyOver";
   }
 }
 
@@ -1403,6 +1432,16 @@ function drawHorseflyFeastOverScreen() {
   background(0);
   fill(255);
   textAlign(CENTER, CENTER);
-  textSize(30);
-  text("Horsefly Mode Over", width / 2, height / 2);
+
+  textSize(34);
+  text("Horsefly Feast Over!", width / 2, height / 2 - 40);
+
+  textSize(22);
+  text("The frog caught you...", width / 2, height / 2 + 5);
+
+  textSize(18);
+  text("Flies eaten: " + horseflyScore, width / 2, height / 2 + 40);
+
+  textSize(16);
+  text("Click to return to the title", width / 2, height / 2 + 80);
 }
