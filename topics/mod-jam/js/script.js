@@ -1176,25 +1176,35 @@ let horseflyFrog = {
 // Flies the horsefly eats
 let horseflyFlies = [];
 let horseflyFlyCount = 5;
-
-// Score for Horsefly mode
-let horseflyScore = 0;
+let horseflyScore = 0; // Score for Horsefly mode
 
 // Start the mode
 function startHorseflyFeastMode() {
   gameState = "horsefly";
+
+  // Start horsefly in the air
   horseflyPlayer.x = width / 2;
   horseflyPlayer.y = height / 4;
 
+  // Frog on the ground
   horseflyFrog.x = width / 2;
   horseflyFrog.groundY = height - 70;
   horseflyFrog.y = horseflyFrog.groundY;
+  horseflyFrog.jumping = false;
+  horseflyFrog.goingUp = true;
   horseflyFrog.cooldown = 60;
+  horseflyFrog.xSpeed = 2.5;
 
+  // Reset score and rage
   horseflyScore = 0;
-  horseflyFlies = [];
+  horseflyRage = 0;
 
-  noCursor(); // hides the mouse pointer so the horsefly becomes the mouse
+  // Spawn a few flies
+  horseflyFlies = [];
+  while (horseflyFlies.length < horseflyFlyCount) {
+    spawnHorseflyFly();
+  }
+  noCursor();
 }
 
 // Make a single fly at a random spot
