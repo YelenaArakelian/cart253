@@ -39,6 +39,12 @@ let spotlightX = 0;
 let spotlightY = 0;
 let spotlightRadius = 100; // radius of spotlight
 let horseflyRage = 0; // how much the frog shakes in horsefly feast
+let nightmareFrog = {
+  x: 300,
+  y: 300,
+  size: 60,
+};
+
 // Horsefly bouncing around the title game screen
 let titleFlyX = 300;
 let titleFlyY = 200;
@@ -1153,6 +1159,20 @@ let horseflyPlayer = {
   size: 80,
 };
 
+// Frog settings used in this mode
+let horseflyFrog = {
+  x: 0,
+  y: 0,
+  size: 140,
+  groundY: 0,
+  jumping: false,
+  goingUp: true,
+  jumpHeight: 120,
+  jumpSpeed: 6,
+  cooldown: 0,
+  xSpeed: 2.5,
+};
+
 // Flies for the horsfly to eat
 let horseflyFlies = [];
 let horseflyFlyCount = 5;
@@ -1167,6 +1187,15 @@ function startHorseflyFeastMode() {
   // Start horsefly in the middle
   horseflyPlayer.x = width / 2;
   horseflyPlayer.y = height / 2;
+
+  // Frog on the ground
+  horseflyFrog.x = width / 2;
+  horseflyFrog.groundY = height - 70; // ground position of the frog
+  horseflyFrog.y = horseflyFrog.groundY;
+  horseflyFrog.jumping = false;
+  horseflyFrog.goingUp = true;
+  horseflyFrog.cooldown = 60; // frames before first jump
+  horseflyFrog.xSpeed = 2.5; // horizontal speed
 
   // Reset score and rage for this mode
   horseflyScore = 0;
@@ -1200,8 +1229,50 @@ function updateHorseflyFeastMode() {
     height - horseflyPlayer.size / 2
   );
 
-  // This checks if the horsefly is eating any flies
+  updateHorseflyFrog();
   checkHorseflyEatFlies();
+}
+
+function updateHorseflyFrog() {
+  // Move frog left and right
+  horseflyFrog.x = horseflyFrog.x + horseflyFrog.xSpeed;
+
+  let halfSize = horseflyFrog.size / 2;
+
+  // Bounce at edges of the canvas
+  if (horseflyFrog.x > width - halfSize || horseflyFrog.x < halfSize) {
+    horseflyFrog.xSpeed = -horseflyFrog.xSpeed;
+  }
+
+  // Jumping logic
+  if (!horseflyFrog.jumping) {
+    // Count down until next jump
+    if (horseflyFrog.cooldown > 0) {
+      horseflyFrog.cooldown = horseflyFrog.cooldown - 1;
+    } else {
+      // Start a jump
+      horseflyFrog.jumping = true;
+      horseflyFrog.goingUp = true;
+    }
+  } else {
+    // Frog is in the air
+    if (horseflyFrog.goingUp) {
+      // Move up
+      horseflyFrog.y = horseflyFrog.y - horseflyFrog.jumpSpeed;
+      if (horseflyFrog.y <= horseflyFrog.groundY - horseflyFrog.jumpHeight) {
+        horseflyFrog.goingUp = false; // reached peak
+      }
+    } else {
+      // Move down
+      horseflyFrog.y = horseflyFrog.y + horseflyFrog.jumpSpeed;
+      if (horseflyFrog.y >= horseflyFrog.groundY) {
+        // Landed back on the ground
+        horseflyFrog.y = horseflyFrog.groundY;
+        horseflyFrog.jumping = false;
+        horseflyFrog.cooldown = 60; // wait some frames before jumping again
+      }
+    }
+  }
 }
 
 // Create a single fly at a random position
