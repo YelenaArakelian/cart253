@@ -1233,6 +1233,28 @@ function updateHorseflyFeastMode() {
     horseflyPlayer.size / 2,
     height - horseflyPlayer.size / 2
   );
+
+  checkHorseflyEatFlies();
+}
+
+function checkHorseflyEatFlies() {
+  for (let oneFly of horseflyFlies) {
+    let distance = dist(horseflyPlayer.x, horseflyPlayer.y, oneFly.x, oneFly.y);
+
+    if (distance < horseflyPlayer.size / 2 + oneFly.size / 2) {
+      // Ate this fly
+      horseflyScore = horseflyScore + 1;
+      horseflyRage = horseflyRage + 1;
+
+      if (horseflyRage > 10) {
+        horseflyRage = 10;
+      }
+
+      // Move the next fly somewhere else
+      oneFly.x = random(40, width - 40);
+      oneFly.y = random(40, height - 160);
+    }
+  }
 }
 
 // Draw Horsefly mode
