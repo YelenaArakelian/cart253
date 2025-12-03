@@ -3,7 +3,7 @@
  * Modes:
  *   1. Classic Feast (original game)
  *   2. Nightmare Spotlight Mode
- *   3. Horsefly Revenge Mode
+ *   3. Horsefly Feast Mode
  *******************************/
 
 "use strict";
@@ -21,6 +21,7 @@ let Font;
 let horseFlyIMG;
 let frogStrikes = 0;
 let mySound; // plays background music
+let gameOverSound; //plays on any game over
 let tongueGif;
 let illusionflyGif;
 let pepescreamGif;
@@ -44,6 +45,8 @@ let nightmareFrog = {
   y: 300,
   size: 60,
 };
+let hungryfrogGif;
+let frogWakeUpGif;
 
 // Horsefly bouncing around the title game screen
 let titleFlyX = 300;
@@ -110,7 +113,7 @@ function drawTitleScreen() {
   image(illusionflyGif, width - 140, 400, 190, 100); // big bottom right illusion fly
   image(tongueGif, 20, 80, 120, 120); // tongue frog top left
 
-  // Make sure text has no outline
+  // no outline on texts
   noStroke();
 
   // Big title
@@ -169,11 +172,11 @@ function drawTitleScreen() {
     titleFlySpeedY *= -1;
   }
 
-  // Small shake so it looks angry
+  // Small shake so it looks angry and funny effect
   let shakeX = random(-3, 3);
   let shakeY = random(-3, 3);
 
-  // Draw it
+  // Draws it
   image(
     horseFlyIMG,
     titleFlyX - titleFlySize / 2 + shakeX,
@@ -384,6 +387,8 @@ function preload() {
   mlemSound = loadSound("assets/sounds/mlem.mp3"); // eating sound effect when fly is eaten
   hurtSound = loadSound("assets/sounds/hurt.mp3"); // hurt sound effect when horsefly is eaten
   scaryGif = loadImage("assets/images/scary.gif");
+  hungryfrogGif = loadImage("assets/images/pepehungry.gif");
+  frogWakeUpGif = loadImage("assets/images/frogwakeup.gif");
 
   // Create a <video></video> element for playback and remove it from the DOM
   video = createVideo("assets/videos/DistractionFlashbang.webm");
@@ -653,34 +658,6 @@ function moveHorseFly() {
   if (horseFly.x > width) {
     horseFly.x = 0;
     horseFly.y = random(100, 400);
-  }
-}
-
-/*******************************
- * INPUT + FROG / FLY LOGIC
- *******************************/
-
-function keyPressed() {
-  if (keyCode === BACKSPACE) {
-    typedText = typedText.slice(0, -1);
-    return false;
-  }
-}
-
-function isPrintable(k) {
-  return k.length === 1 && k.charCodeAt(0) >= 32 && k.charCodeAt(0) <= 126;
-}
-
-// Tracks keys pressed by user
-function keyTyped() {
-  if (isPrintable(key)) {
-    typedText += key;
-  }
-
-  // Check if they typed "frog"
-  if (typedText.toLowerCase() === "frog") {
-    gameState = "play"; // Start the game
-    typedText = ""; // Reset input
   }
 }
 
@@ -1139,6 +1116,7 @@ function drawNightmareOverScreen() {
   background(0); // black screen
 
   image(scaryGif, width / 2 - 150, height / 2 - 220, 300, 200);
+  image(frogWakeUpGif, 0, 270, 220, 220);
 
   fill(255);
   textAlign(CENTER, CENTER);
@@ -1343,7 +1321,7 @@ function drawHorseflyFrog() {
 function spawnHorseflyFly() {
   let flyObj = {
     x: random(40, width - 40),
-    y: random(40, height - 160), // keep them above the very bottom
+    y: random(40, height - 160), // keep them above the very bottom so you dont die easily
     size: 18,
   };
   horseflyFlies.push(flyObj);
@@ -1419,7 +1397,7 @@ function drawHorseflyFeastMode() {
     horseflyPlayer.size
   );
 
-  // score & basic instructions
+  // score
   fill(0);
   textAlign(LEFT, TOP);
   textSize(30);
@@ -1429,9 +1407,10 @@ function drawHorseflyFeastMode() {
 // Game over screen for Horsefly feast game mode
 function drawHorseflyFeastOverScreen() {
   cursor();
-  background(0);
+  background("#7e3712ff");
   fill(255);
   textAlign(CENTER, CENTER);
+  image(hungryfrogGif, 120, 370, 250, 250);
 
   textSize(34);
   text("Horsefly Feast Over!", width / 2, height / 2 - 40);
