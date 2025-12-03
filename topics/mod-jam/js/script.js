@@ -1167,7 +1167,7 @@ let horseflyFrog = {
   groundY: 0,
   jumping: false,
   goingUp: true,
-  jumpHeight: 120,
+  jumpHeight: 150,
   jumpSpeed: 6,
   cooldown: 0,
   xSpeed: 2.5,
@@ -1275,6 +1275,65 @@ function updateHorseflyFrog() {
   }
 }
 
+function drawHorseflyFrog() {
+  push();
+  imageMode(CENTER);
+
+  // How much the frog shakes based on rage (0 to 10)
+  let maxShake = 60;
+  let shakeAmount = map(horseflyRage, 0, 60, 0, maxShake);
+  let offsetX = random(-shakeAmount, shakeAmount);
+  let offsetY = random(-shakeAmount, shakeAmount);
+
+  // Body color goes from green (calm) to red (angry) for funny effect
+  let calmColor = color("#00ff00");
+  let angryColor = color("#ff0000ff");
+  let t = constrain(horseflyRage / 10, 0, 1);
+  let bodyColor = lerpColor(calmColor, angryColor, t);
+
+  // Body
+  noStroke();
+  fill(bodyColor);
+  ellipse(
+    horseflyFrog.x + offsetX,
+    horseflyFrog.y + offsetY,
+    horseflyFrog.size
+  );
+
+  // Eyes
+  fill("#ffffff");
+  let eyeOffsetX = horseflyFrog.size * 0.25;
+  let eyeOffsetY = horseflyFrog.size * 0.25;
+  let eyeSize = horseflyFrog.size * 0.45;
+
+  ellipse(
+    horseflyFrog.x - eyeOffsetX + offsetX,
+    horseflyFrog.y - eyeOffsetY + offsetY,
+    eyeSize
+  );
+  ellipse(
+    horseflyFrog.x + eyeOffsetX + offsetX,
+    horseflyFrog.y - eyeOffsetY + offsetY,
+    eyeSize
+  );
+
+  // Pupils
+  fill("#000000");
+  let pupilSize = eyeSize * 0.5;
+  ellipse(
+    horseflyFrog.x - eyeOffsetX + offsetX,
+    horseflyFrog.y - eyeOffsetY + offsetY,
+    pupilSize
+  );
+  ellipse(
+    horseflyFrog.x + eyeOffsetX + offsetX,
+    horseflyFrog.y - eyeOffsetY + offsetY,
+    pupilSize
+  );
+
+  pop();
+}
+
 // Create a single fly at a random position
 function spawnHorseflyFly() {
   let flyObj = {
@@ -1312,6 +1371,7 @@ function drawHorseflyFeastMode() {
   // Reuse the classic background as the other variations
   background("#09f8e4ff");
   drawBackground();
+  drawHorseflyFrog();
 
   // Draw flies
   noStroke();
@@ -1333,7 +1393,7 @@ function drawHorseflyFeastMode() {
   // score & basic instructions
   fill(0);
   textAlign(LEFT, TOP);
-  textSize(18);
+  textSize(30);
   text("Flies eaten: " + horseflyScore, 10, 10);
 }
 
